@@ -68,10 +68,13 @@
 ### Тип приложения и технологический стек
 
 Тип приложения: Web MPA
-Технологический стек: Golang, html, css, PostgreSQL
+Технологический стек: Golang, HTML, CSS, PostgreSQL
 
 ### Верхнеуровневое разбиение на компоненты
 
 ![busmodel](/img/partition.png)
 
 
+### UML диаграмма классов
+
+![uml](/img/uml.png)
