@@ -2,8 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/src/user"
-	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/src/handler"
+	//"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/src/user"
 )
 
 type Handler struct {}
