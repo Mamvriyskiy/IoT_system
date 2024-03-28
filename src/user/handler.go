@@ -1,6 +1,9 @@
 package user
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/src/handler"
+)
 
 func (h *Handler) signUp(c *gin.Context) {
 

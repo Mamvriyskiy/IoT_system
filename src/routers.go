@@ -2,10 +2,9 @@ package src
 
 import (
 	"github.com/gin-gonic/gin"
-	""
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/src/user"
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/src/handler"
 )
-
-type Handler struct{}
 
 func (h *Handler) InitRouters() *gin.Engine {
 	router := gin.New()
