@@ -1,4 +1,4 @@
-package devicesHistory
+package pkg
 
 type DevicesHistory struct {
 	Id               int     `json:"-"`

@@ -1,4 +1,4 @@
-package home
+package pkg
 
 type Home struct {
 	Id      int    `json:"-"`

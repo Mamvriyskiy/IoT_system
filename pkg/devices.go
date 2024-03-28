@@ -1,4 +1,4 @@
-package devices
+package pkg
 
 type Devices struct {
 	Id               int    `json:"-"`

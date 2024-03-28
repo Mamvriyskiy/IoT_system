@@ -1,4 +1,4 @@
-package user
+package pkg
 
 type User struct {
 	Id       int    `json:"-"`

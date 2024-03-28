@@ -1,4 +1,4 @@
-package accessHome
+package pkg
 
 type AccessHome struct {
 	Id           int  `json:"-"`
