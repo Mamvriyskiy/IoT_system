@@ -2,8 +2,8 @@ package main
 
 import (
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
-	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository"
 	handler "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/handler"
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository"
 	"log"
 )
 

@@ -5,17 +5,26 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type Authorization interface {
+type IUserRepo interface {
 	CreateUser(user pkg.User) (int, error)
+	GetUserByEmail(email string) (int, error)
+	GetPasswordById(id int) (string, error)
 }
 
+type IHomeRepo interface {
+	CreateHome(idUser int, home pkg.Home) (int, error)
+	DeleteHome(idUser int, home pkg.Home) error
+	UpdateHome(idUser int, home pkg.Home) error
+}
 
 type Repository struct {
-	Authorization
+	IUserRepo
+	IHomeRepo
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
-		Authorization : NewAuthPostgres(db),
+		IUserRepo: NewUserPostgres(db),
+		IHomeRepo: NewHomePostgres(db),
 	}
 }

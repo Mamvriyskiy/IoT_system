@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"github.com/gin-gonic/gin"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/service"
+	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
@@ -20,6 +20,13 @@ func (h *Handler) InitRouters() *gin.Engine {
 	{
 		auth.POST("/sign-up", h.signUp)
 		auth.POST("/sign-in", h.signIn)
+	}
+
+	home := router.Group("/home")
+	{
+		home.POST("/create-home", h.createHome)
+		home.DELETE("/delete-home", h.deleteHome)
+		home.PUT("/update-home", h.updateHome)
 	}
 
 	return router

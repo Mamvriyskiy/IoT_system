@@ -5,16 +5,25 @@ import (
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository"
 )
 
-type Authorization interface {
+type IUser interface {
 	CreateUser(user pkg.User) (int, error)
+	CheckUser(user pkg.User) (bool, int, error)
+}
+
+type IHome interface {
+	CreateHome(idUser int, home pkg.Home) (int, error)
+	DeleteHome(idUser int, home pkg.Home) error
+	UpdateHome(idUser int, home pkg.Home) error
 }
 
 type Services struct {
-	Authorization
+	IUser
+	IHome
 }
 
 func NewServices(repo *repository.Repository) *Services {
 	return &Services{
-		Authorization : NewAuthService(repo.Authorization),
+		IUser: NewUserService(repo.IUserRepo),
+		IHome: NewHomeService(repo.IHomeRepo),
 	}
 }
