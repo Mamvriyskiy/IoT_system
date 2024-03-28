@@ -1,10 +1,14 @@
 package main
 
-import "log"
+import (
+	"log"
+	src "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/src"
+)
 
 func main() {
-	srv := new(todo.Server)
-	if err := srv.Run("8889"); err != nil {
+	handlers := new(src.Handler)
+	srv := new(src.Server)
+	if err := srv.Run("8889", handlers.InitRouters()); err != nil {
 		log.Fatal("error occured while running http server: %s", err.Error())
 	}
 }
