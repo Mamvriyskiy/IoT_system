@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	src "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/src"
+	src "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/src/handler"
 )
 
 func main() {
