@@ -33,7 +33,9 @@ type IDevice interface {
 }
 
 type IHistoryDevice interface {
-
+	CreateDeviceHistory(history pkg.DevicesHistory) (int, error)
+	UpdateDeviceHistory(idDevice int, input pkg.DevicesHistory) error
+	GetDeviceHistory(idDevice int) ([]pkg.DevicesHistory, error)
 }
 
 type Services struct {
@@ -49,6 +51,6 @@ func NewServices(repo *repository.Repository) *Services {
 		IUser: NewUserService(repo.IUserRepo),
 		IHome: NewHomeService(repo.IHomeRepo),
 		IAccessHome: NewAccessHomeService(repo.IAccessHomeRepo),
-		IHistoryDevice: NewHistoryDeviceService(repot.IHistoryDevice)
+		IHistoryDevice: NewHistoryDeviceService(repo.IHistoryDeviceRepo),
 	}
 }

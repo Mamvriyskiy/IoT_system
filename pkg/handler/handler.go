@@ -45,10 +45,11 @@ func (h *Handler) InitRouters() *gin.Engine {
 			devices.POST("/:id/add", h.addHomeDevice)
 			devices.POST("/:id/del", h.deleteHomeDevice)
 
-			diveceHistory := router.Group(":id/device/:id/history") 
+			deviceHistory := router.Group(":id/device/:id/history") 
 			{
-				diveceHistory.POST("/", h.createHistory)
-				diveceHistory.POST("/", h.updateHistory)
+				deviceHistory.POST("/", h.createDeviceHistory)
+				deviceHistory.PUT("/:id", h.updateDeviceHistory)
+				deviceHistory.GET("/:id", h.getDeviceHistory)
 			}
 		}
 	}

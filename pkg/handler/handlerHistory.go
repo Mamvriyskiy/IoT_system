@@ -5,25 +5,63 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (h *Handler) createHome(c *gin.Context) {
+func (h *Handler) createDeviceHistory(c *gin.Context) {
 	// id, ok := c.Get(userCtx)
 	// if !ok {
 	// 	// *TODO: log
 	// 	return
 	// }
 
-	var input pkg.Home
+	var input pkg.DevicesHistory
 	if err := c.BindJSON(&input); err != nil {
 		// *TODO: log
 		return
 	}
 
-	id := 0
-	idHome, err := h.services.IHome.CreateHome(id, input)
+	idHistory, err := h.services.IHistoryDevice.CreateDeviceHistory(input)
 	if err != nil {
 		// *TODO log
 		return
 	}
 
-	_ = idHome
+	_ = idHistory
 }
+
+func (h *Handler) updateDeviceHistory(c *gin.Context) {
+	// id, ok := c.Get(userCtx)
+	// if !ok {
+	// 	// *TODO: log
+	// 	return
+	// }
+
+	var input pkg.DevicesHistory
+	if err := c.BindJSON(&input); err != nil {
+		// *TODO: log
+		return
+	}
+
+	idDevice := 0
+	err := h.services.IHistoryDevice.UpdateDeviceHistory(idDevice, input)
+	if err != nil {
+		// *TODO log
+		return
+	}
+}
+
+func (h *Handler) getDeviceHistory(c *gin.Context) {
+	// id, ok := c.Get(userCtx)
+	// if !ok {
+	// 	// *TODO: log
+	// 	return
+	// }
+
+	idDevice := 0
+	input, err := h.services.IHistoryDevice.GetDeviceHistory(idDevice)
+	if err != nil {
+		// *TODO log
+		return
+	}
+
+	_ = input
+}
+

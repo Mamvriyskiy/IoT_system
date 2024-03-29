@@ -33,12 +33,18 @@ type IDeviceRepo interface {
 	DeleteHomeDevice(idHome int, idDevice int, input pkg.Devices) error
 }
 
+type IHistoryDeviceRepo interface {
+	CreateDeviceHistory(history pkg.DevicesHistory) (int, error)
+	UpdateDeviceHistory(idDevice int, history pkg.DevicesHistory) error
+	GetDeviceHistory(idDevice int) ([]pkg.DevicesHistory, error)
+}
 
 type Repository struct {
 	IUserRepo
 	IHomeRepo
 	IAccessHomeRepo
 	IDeviceRepo
+	IHistoryDeviceRepo
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
@@ -47,5 +53,6 @@ func NewRepository(db *sqlx.DB) *Repository {
 		IHomeRepo: NewHomePostgres(db),
 		IAccessHomeRepo: NewAccessHomePostgres(db),
 		IDeviceRepo: NewDevicePostgres(db),
+		IHistoryDeviceRepo: NewDeviceHistoryPostgres(db),
 	}
 }
