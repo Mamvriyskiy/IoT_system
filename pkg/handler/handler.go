@@ -24,9 +24,33 @@ func (h *Handler) InitRouters() *gin.Engine {
 
 	home := router.Group("/home")
 	{
-		home.POST("/create-home", h.createHome)
-		home.DELETE("/delete-home", h.deleteHome)
-		home.PUT("/update-home", h.updateHome)
+		home.POST("/", h.createHome)
+		home.DELETE("/:id", h.deleteHome)
+		home.PUT("/:id", h.updateHome)
+
+		access := router.Group(":id/access")
+		{
+			access.POST("/", h.addUser)
+			access.DELETE("/:id", h.deleteUser)
+			access.GET("/:id", h.getListUserHome)
+			access.PUT("/level/:id", h.updateLevel)
+			access.PUT("/status/:id", h.updateStatus)
+		}
+
+		devices := router.Group(":id/device") 
+		{
+			devices.POST("/", h.createDevice)
+			devices.DELETE("/:id", h.deleteDevice)
+			devices.PUT("/:id", h.updateDevice)
+			devices.POST("/:id/add", h.addHomeDevice)
+			devices.POST("/:id/del", h.deleteHomeDevice)
+
+			diveceHistory := router.Group(":id/device/:id/history") 
+			{
+				diveceHistory.POST("/", h.createHistory)
+				diveceHistory.POST("/", h.updateHistory)
+			}
+		}
 	}
 
 	return router

@@ -71,3 +71,5 @@ func (h *Handler) updateHome(c *gin.Context) {
 		return
 	}
 }
+
+

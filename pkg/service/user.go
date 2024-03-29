@@ -25,7 +25,7 @@ func (s *UserService) CreateUser(user pkg.User) (int, error) {
 func (s *UserService) CheckUser(user pkg.User) (bool, int, error) {
 	var err error
 	if user.Email == "" {
-		// *TODO: log, error
+		// *TODO: log
 		return false, -1, err
 	}
 
