@@ -1,9 +1,9 @@
 package pkg
 
 type DevicesHistory struct {
-	Id               int     `json:"-"`
+	ID               int     `json:"-"`
 	DevicesID        int     `json:"devicesId"`
-	TimeWork         int     `json:"timework"` //second
+	TimeWork         int     `json:"timework"`
 	AverageIndicator float64 `json:"average"`
 	EnergyConsumed   int     `json:"energy"`
 }

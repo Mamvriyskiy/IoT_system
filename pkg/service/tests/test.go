@@ -1,9 +1,8 @@
 package tests 
 
 import (
-    //"errors"
     "testing"
-
+    "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
     "github.com/golang/mock/gomock"
 )
 
