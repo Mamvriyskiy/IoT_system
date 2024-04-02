@@ -23,7 +23,7 @@ func TestCreateDevice(t *testing.T) {
 		MinParameter:     50, //temperature
 		MaxParameter:     120,
 	}
-
+	
 	mockRepo.EXPECT().CreateDevice(device).Return(10, nil)
 
 	deviceService := service.NewDeviceService(mockRepo)
