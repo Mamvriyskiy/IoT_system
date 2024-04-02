@@ -1,11 +1,12 @@
-package tests
+package tests_test
 
 import (
+	"testing"
+
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	mocks_service "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository/mocks"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/service"
 	"github.com/golang/mock/gomock"
-	"testing"
 )
 
 func TestCreateUser(t *testing.T) {
@@ -25,7 +26,6 @@ func TestCreateUser(t *testing.T) {
 	userService := service.NewUserService(mockRepo)
 
 	userID, err := userService.CreateUser(user)
-
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
@@ -46,13 +46,17 @@ func TestCheckUser(t *testing.T) {
 		Password: "qwerty",
 	}
 
-	mockRepo.EXPECT().GetPasswordById(123).Return("6866646a6d6178636b646b3230b1b3773a05c0ed0176787a4f1574ff0075f7521e", nil)
+	mockRepo.EXPECT().
+		GetPasswordByID(123).
+		Return(
+			"6866646a6d6178636b646b323065e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5",
+			nil)
+
 	mockRepo.EXPECT().GetUserByEmail("qwerty@mail.ru").Return(123, nil)
 
 	userService := service.NewUserService(mockRepo)
 
 	cmp, userID, err := userService.CheckUser(user)
-
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}

@@ -1,11 +1,12 @@
-package tests
+package tests_test
 
 import (
+	"testing"
+
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	mocks_service "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository/mocks"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/service"
 	"github.com/golang/mock/gomock"
-	"testing"
 )
 
 func TestGetListUserHome(t *testing.T) {
@@ -15,9 +16,9 @@ func TestGetListUserHome(t *testing.T) {
 	mockRepo := mocks_service.NewMockIAccessHomeRepo(ctrl)
 
 	accessHome := pkg.AccessHome{
-		HomeID: 5,
-		AccessStatus:    true,
-		AccessLevel: 2,
+		HomeID:       5,
+		AccessStatus: true,
+		AccessLevel:  2,
 	}
 
 	mockRepo.EXPECT().GetListUserHome(10, accessHome).Return(nil, nil)
@@ -25,7 +26,6 @@ func TestGetListUserHome(t *testing.T) {
 	accessService := service.NewAccessHomeService(mockRepo)
 
 	list, err := accessService.GetListUserHome(10, accessHome)
-
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
@@ -41,9 +41,9 @@ func TestUpdateStatus(t *testing.T) {
 	mockRepo := mocks_service.NewMockIAccessHomeRepo(ctrl)
 
 	accessHome := pkg.AccessHome{
-		HomeID: 5,
-		AccessStatus:    true,
-		AccessLevel: 2,
+		HomeID:       5,
+		AccessStatus: true,
+		AccessLevel:  2,
 	}
 
 	mockRepo.EXPECT().UpdateStatus(10, accessHome).Return(nil)
@@ -51,7 +51,6 @@ func TestUpdateStatus(t *testing.T) {
 	accessService := service.NewAccessHomeService(mockRepo)
 
 	err := accessService.UpdateStatus(10, accessHome)
-
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
@@ -64,9 +63,9 @@ func TestUpdateLevel(t *testing.T) {
 	mockRepo := mocks_service.NewMockIAccessHomeRepo(ctrl)
 
 	accessHome := pkg.AccessHome{
-		HomeID: 5,
-		AccessStatus:    true,
-		AccessLevel: 2,
+		HomeID:       5,
+		AccessStatus: true,
+		AccessLevel:  2,
 	}
 
 	mockRepo.EXPECT().UpdateLevel(10, accessHome).Return(nil)
@@ -74,7 +73,6 @@ func TestUpdateLevel(t *testing.T) {
 	accessService := service.NewAccessHomeService(mockRepo)
 
 	err := accessService.UpdateLevel(10, accessHome)
-
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
@@ -87,9 +85,9 @@ func TestDeleteUser(t *testing.T) {
 	mockRepo := mocks_service.NewMockIAccessHomeRepo(ctrl)
 
 	accessHome := pkg.AccessHome{
-		HomeID: 5,
-		AccessStatus:    true,
-		AccessLevel: 2,
+		HomeID:       5,
+		AccessStatus: true,
+		AccessLevel:  2,
 	}
 
 	mockRepo.EXPECT().DeleteUser(10, accessHome).Return(nil)
@@ -97,7 +95,6 @@ func TestDeleteUser(t *testing.T) {
 	accessService := service.NewAccessHomeService(mockRepo)
 
 	err := accessService.DeleteUser(10, accessHome)
-
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
@@ -110,9 +107,9 @@ func TestAddUser(t *testing.T) {
 	mockRepo := mocks_service.NewMockIAccessHomeRepo(ctrl)
 
 	accessHome := pkg.AccessHome{
-		HomeID: 5,
-		AccessStatus:    true,
-		AccessLevel: 2,
+		HomeID:       5,
+		AccessStatus: true,
+		AccessLevel:  2,
 	}
 
 	mockRepo.EXPECT().AddUser(accessHome).Return(5, nil)
@@ -120,7 +117,6 @@ func TestAddUser(t *testing.T) {
 	accessService := service.NewAccessHomeService(mockRepo)
 
 	accessID, err := accessService.AddUser(accessHome)
-
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
