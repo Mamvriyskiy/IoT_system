@@ -1,10 +1,11 @@
 package main
 
 import (
+	// "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository".
+	"log"
+
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	handler "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/handler"
-	// "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository"
-	"log"
 )
 
 func main() {
@@ -16,6 +17,6 @@ func main() {
 
 	srv := new(pkg.Server)
 	if err := srv.Run("8889", handlers.InitRouters()); err != nil {
-		log.Fatal("error occured while running http server: ", err)
+		log.Fatal("error occurred while running http server: ", err)
 	}
 }

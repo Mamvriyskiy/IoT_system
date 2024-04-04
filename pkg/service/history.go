@@ -24,4 +24,3 @@ func (s *HistoryDeviceService) UpdateDeviceHistory(idDevice int, history pkg.Dev
 func (s *HistoryDeviceService) GetDeviceHistory(idDevice int) ([]pkg.DevicesHistory, error) {
 	return s.repo.GetDeviceHistory(idDevice)
 }
-

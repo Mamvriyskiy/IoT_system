@@ -13,23 +13,22 @@ func NewDevicePostgres(db *sqlx.DB) *DevicePostgres {
 	return &DevicePostgres{db: db}
 }
 
-func (r *DevicePostgres) CreateDevice(device pkg.Devices) (int, error) {
+func (r *DevicePostgres) CreateDevice(device *pkg.Devices) (int, error) {
 	return 0, nil
 }
 
-func (r *DevicePostgres) DeleteDevice(idDevice int, device pkg.Devices) error {
+func (r *DevicePostgres) DeleteDevice(idDevice int, device *pkg.Devices) error {
 	return nil
 }
 
-func (r *DevicePostgres) UpdateDevice(idDevice int, device pkg.Devices) error {
+func (r *DevicePostgres) UpdateDevice(idDevice int, device *pkg.Devices) error {
 	return nil
 }
 
-func (r *DevicePostgres) AddHomeDevice(idHome int, idDevice int, input pkg.Devices) error {
+func (r *DevicePostgres) AddHomeDevice(idHome, idDevice int, input *pkg.Devices) error {
 	return nil
 }
 
-func (r *DevicePostgres) DeleteHomeDevice(idHome int, idDevice int, input pkg.Devices) error {
+func (r *DevicePostgres) DeleteHomeDevice(idHome, idDevice int, input *pkg.Devices) error {
 	return nil
 }
-

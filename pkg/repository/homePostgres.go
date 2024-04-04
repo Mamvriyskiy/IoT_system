@@ -13,14 +13,14 @@ func NewHomePostgres(db *sqlx.DB) *HomePostgres {
 	return &HomePostgres{db: db}
 }
 
-func (r *HomePostgres) CreateHome(ownerId int, home pkg.Home) (int, error) {
+func (r *HomePostgres) CreateHome(ownerID int, home pkg.Home) (int, error) {
 	return 0, nil
 }
 
-func (r *HomePostgres) DeleteHome(ownerId int, home pkg.Home) error {
+func (r *HomePostgres) DeleteHome(ownerID int, home pkg.Home) error {
 	return nil
 }
 
-func (r *HomePostgres) UpdateHome(ownerId int, home pkg.Home) error {
+func (r *HomePostgres) UpdateHome(ownerID int, home pkg.Home) error {
 	return nil
 }

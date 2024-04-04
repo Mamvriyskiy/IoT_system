@@ -67,14 +67,14 @@ func (h *Handler) updateStatus(c *gin.Context) {
 }
 
 func (h *Handler) getListUserHome(c *gin.Context) {
-	homeId := 0
+	homeID := 0
 	var input pkg.AccessHome
 	if err := c.BindJSON(&input); err != nil {
 		// *TODO: log
 		return
 	}
 
-	listUser, err := h.services.IAccessHome.GetListUserHome(homeId, input)
+	listUser, err := h.services.IAccessHome.GetListUserHome(homeID, input)
 	if err != nil {
 		// *TODO log
 		return

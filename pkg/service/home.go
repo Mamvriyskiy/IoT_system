@@ -17,10 +17,10 @@ func (s *HomeService) CreateHome(idUser int, home pkg.Home) (int, error) {
 	return s.repo.CreateHome(idUser, home)
 }
 
-func (s *HomeService) DeleteHome(idUser int, home pkg.Home) (error) {
+func (s *HomeService) DeleteHome(idUser int, home pkg.Home) error {
 	return s.repo.DeleteHome(idUser, home)
 }
 
-func (s *HomeService) UpdateHome(idUser int, home pkg.Home) (error) {
+func (s *HomeService) UpdateHome(idUser int, home pkg.Home) error {
 	return s.repo.UpdateHome(idUser, home)
 }

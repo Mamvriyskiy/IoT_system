@@ -21,6 +21,6 @@ func (r *UserPostgres) GetUserByEmail(emal string) (int, error) {
 	return 0, nil
 }
 
-func (r *UserPostgres) GetPasswordById(id int) (string, error) {
+func (r *UserPostgres) GetPasswordByID(id int) (string, error) {
 	return "", nil
 }

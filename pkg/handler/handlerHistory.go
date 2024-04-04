@@ -64,4 +64,3 @@ func (h *Handler) getDeviceHistory(c *gin.Context) {
 
 	_ = input
 }
-

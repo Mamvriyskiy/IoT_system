@@ -5,10 +5,12 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+//go:generate mockgen -source=repository.go -destination=mocks/mocks.go
+
 type IUserRepo interface {
 	CreateUser(user pkg.User) (int, error)
 	GetUserByEmail(email string) (int, error)
-	GetPasswordById(id int) (string, error)
+	GetPasswordByID(id int) (string, error)
 }
 
 type IHomeRepo interface {
@@ -26,11 +28,11 @@ type IAccessHomeRepo interface {
 }
 
 type IDeviceRepo interface {
-	CreateDevice(device pkg.Devices) (int, error)
-	DeleteDevice(idDevice int, device pkg.Devices) error
-	UpdateDevice(idDevice int, device pkg.Devices) error
-	AddHomeDevice(idHome int, idDevice int, input pkg.Devices) error
-	DeleteHomeDevice(idHome int, idDevice int, input pkg.Devices) error
+	CreateDevice(device *pkg.Devices) (int, error)
+	DeleteDevice(idDevice int, device *pkg.Devices) error
+	UpdateDevice(idDevice int, device *pkg.Devices) error
+	AddHomeDevice(idHome, idDevice int, input *pkg.Devices) error
+	DeleteHomeDevice(idHome, idDevice int, input *pkg.Devices) error
 }
 
 type IHistoryDeviceRepo interface {
@@ -49,10 +51,10 @@ type Repository struct {
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
-		IUserRepo: NewUserPostgres(db),
-		IHomeRepo: NewHomePostgres(db),
-		IAccessHomeRepo: NewAccessHomePostgres(db),
-		IDeviceRepo: NewDevicePostgres(db),
+		IUserRepo:          NewUserPostgres(db),
+		IHomeRepo:          NewHomePostgres(db),
+		IAccessHomeRepo:    NewAccessHomePostgres(db),
+		IDeviceRepo:        NewDevicePostgres(db),
 		IHistoryDeviceRepo: NewDeviceHistoryPostgres(db),
 	}
 }
