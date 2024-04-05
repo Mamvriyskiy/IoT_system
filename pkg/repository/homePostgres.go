@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/jmoiron/sqlx"
 )
@@ -14,7 +15,14 @@ func NewHomePostgres(db *sqlx.DB) *HomePostgres {
 }
 
 func (r *HomePostgres) CreateHome(ownerID int, home pkg.Home) (int, error) {
-	return 0, nil
+	var id int
+	query := fmt.Sprintf("INSERT INTO %s (ownerid, name) values ($1, $2) RETURNING homeID", "home")
+	row := r.db.QueryRow(query, ownerID, home.name)
+	if err := row.Scan(&id); err != nil {
+		return 0, err
+	}
+
+	return id, nil
 }
 
 func (r *HomePostgres) DeleteHome(ownerID int, home pkg.Home) error {

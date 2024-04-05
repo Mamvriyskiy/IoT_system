@@ -26,10 +26,11 @@ func (r *UserPostgres) CreateUser(user pkg.User) (int, error) {
 	return id, nil
 }
 
-func (r *UserPostgres) GetUserByEmail(emal string) (int, error) {
-	return 0, nil
-}
+func (r *UserPostgres) GetUser(login, password string) (pkg.User, error) {
+	var user pkg.User
+	query := fmt.Sprintf("SELECT clientid from %s where login = $1 and password = $2", "client")
+	err := r.db.Get(&user, query, login, password)
 
-func (r *UserPostgres) GetPasswordByID(id int) (string, error) {
-	return "", nil
+	fmt.Println(user, err)
+	return user, err
 }

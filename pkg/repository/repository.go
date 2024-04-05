@@ -9,8 +9,7 @@ import (
 
 type IUserRepo interface {
 	CreateUser(user pkg.User) (int, error)
-	GetUserByEmail(email string) (int, error)
-	GetPasswordByID(id int) (string, error)
+	GetUser(login, password string) (pkg.User, error)
 }
 
 type IHomeRepo interface {

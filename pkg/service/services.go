@@ -7,7 +7,8 @@ import (
 
 type IUser interface {
 	CreateUser(user pkg.User) (int, error)
-	CheckUser(user pkg.User) (bool, int, error)
+	CheckUser(user pkg.User) (int, error)
+	GenerateToken(login, password string) (string, error)
 }
 
 type IHome interface {

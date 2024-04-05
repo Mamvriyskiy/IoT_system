@@ -2,11 +2,11 @@ package pkg
 
 type Devices struct {
 	Name             string `json:"name"`
-	TypeDevice       string `json:"type"`
+	TypeDevice       string `json:"typeDevice"`
 	Status           string `json:"status"`
 	Brand            string `json:"brand"`
-	ID               int    `json:"-"`
-	PowerConsumption int    `json:"power"`
-	MinParameter     int    `json:"minl"`
-	MaxParameter     int    `json:"maxl"`
+	deviceID         int    `json:"-" db:"deviceID"`
+	PowerConsumption int    `json:"powerConsumption"`
+	MinParameter     int    `json:"minParametr"`
+	MaxParameter     int    `json:"maxParametr"`
 }

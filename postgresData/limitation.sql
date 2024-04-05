@@ -30,6 +30,8 @@ ADD FOREIGN KEY (clientID) REFERENCES client (clientID);
 ALTER TABLE home
 ALTER COLUMN name
 SET NOT NULL,
+ALTER COLUMN ownerID
+SET NOT NULL,
 ADD check (name != ''),
 ADD primary key (homeID);
 

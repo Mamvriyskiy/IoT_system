@@ -3,12 +3,18 @@ package service
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"time"
+
+	jwt "github.com/dgrijalva/jwt-go"
 
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository"
 )
 
-const salt = "hfdjmaxckdk20"
+const (
+	salt       = "hfdjmaxckdk20"
+	signingKey = "jaskljfkdfndnznmckmdkaf3124kfdlsf"
+)
 
 type UserService struct {
 	repo repository.IUserRepo
@@ -23,30 +29,40 @@ func (s *UserService) CreateUser(user pkg.User) (int, error) {
 	return s.repo.CreateUser(user)
 }
 
-func (s *UserService) CheckUser(user pkg.User) (exists bool, id int, err error) {
+func (s *UserService) CheckUser(user pkg.User) (id int, err error) {
 	if user.Email == "" {
 		// *TODO: log
-		return false, -1, err
+		return -1, err
 	}
 
-	id, err = s.repo.GetUserByEmail(user.Email)
+	user, err = s.repo.GetUser(user.Username, user.Password)
 	if err != nil {
 		// *TODO: log
-		return false, id, err
+		return id, err
 	}
 
-	pswd, err := s.repo.GetPasswordByID(id)
-	if err != nil {
-		// *TODO: log
-		return false, id, err
-	}
-
-	return s.comparePassword(user.Password, pswd), id, err
+	return user.ID, err
 }
 
-func (s *UserService) comparePassword(pswd, hash string) bool {
-	newHash := s.generatePasswordHash(pswd)
-	return newHash == hash
+type tokenClaims struct {
+	jwt.StandardClaims
+	UserID int `json" "user_id"`
+}
+
+func (s *UserService) GenerateToken(login, password string) (string, error) {
+	user, err := s.repo.GetUser(login, s.generatePasswordHash(password))
+	if err != nil {
+		return "", err
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
+		jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(12 * time.Hour).Unix(),
+			IssuedAt:  time.Now().Unix(),
+		},
+		user.ID,
+	})
+
+	return token.SignedString([]byte(signingKey))
 }
 
 func (s *UserService) generatePasswordHash(password string) string {

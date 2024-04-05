@@ -49,34 +49,19 @@ func (mr *MockIUserRepoMockRecorder) CreateUser(user interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockIUserRepo)(nil).CreateUser), user)
 }
 
-// GetPasswordByID mocks base method.
-func (m *MockIUserRepo) GetPasswordByID(id int) (string, error) {
+// GetUser mocks base method.
+func (m *MockIUserRepo) GetUser(login, password string) (pkg.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPasswordByID", id)
-	ret0, _ := ret[0].(string)
+	ret := m.ctrl.Call(m, "GetUser", login, password)
+	ret0, _ := ret[0].(pkg.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetPasswordByID indicates an expected call of GetPasswordByID.
-func (mr *MockIUserRepoMockRecorder) GetPasswordByID(id interface{}) *gomock.Call {
+// GetUser indicates an expected call of GetUser.
+func (mr *MockIUserRepoMockRecorder) GetUser(login, password interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPasswordByID", reflect.TypeOf((*MockIUserRepo)(nil).GetPasswordByID), id)
-}
-
-// GetUserByEmail mocks base method.
-func (m *MockIUserRepo) GetUserByEmail(email string) (int, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUserByEmail", email)
-	ret0, _ := ret[0].(int)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetUserByEmail indicates an expected call of GetUserByEmail.
-func (mr *MockIUserRepoMockRecorder) GetUserByEmail(email interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByEmail", reflect.TypeOf((*MockIUserRepo)(nil).GetUserByEmail), email)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUser", reflect.TypeOf((*MockIUserRepo)(nil).GetUser), login, password)
 }
 
 // MockIHomeRepo is a mock of IHomeRepo interface.

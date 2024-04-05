@@ -3,6 +3,7 @@ package repository
 import (
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/jmoiron/sqlx"
+	"fmt"
 )
 
 type AccessHomePostgres struct {
@@ -14,6 +15,13 @@ func NewAccessHomePostgres(db *sqlx.DB) *AccessHomePostgres {
 }
 
 func (r *AccessHomePostgres) AddUser(access pkg.AccessHome) (int, error) {
+	var id int
+	query := fmt.Sprintf("INSERT INTO %s (accessStatus, accessLevel) values ($1, $2) RETURNING accessID", "access")
+	row := r.db.QueryRow(query, access.AccessStatus, access.Username, access.AccessLevel)
+	if err := row.Scan(&id); err != nil {
+		return 0, err
+	}
+
 	return 0, nil
 }
 

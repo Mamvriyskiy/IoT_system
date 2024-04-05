@@ -13,7 +13,14 @@ func NewDeviceHistoryPostgres(db *sqlx.DB) *DeviceHistoryPostgres {
 	return &DeviceHistoryPostgres{db: db}
 }
 
+
 func (r *DeviceHistoryPostgres) CreateDeviceHistory(device pkg.DevicesHistory) (int, error) {
+	var id int
+	query := fmt.Sprintf("INSERT INTO %s (timeWork, AverageIndicator, EnergyConsumed) values ($1, $2, $3) RETURNING historyDevID", "historyDev")
+	row := r.db.QueryRow(query, device.TimeWork, device.AverageIndicator, device.AccessLevel)
+	if err := row.Scan(&id); err != nil {
+		return 0, err
+	}
 	return 0, nil
 }
 

@@ -3,6 +3,7 @@ module git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3
 go 1.22.1
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.9.1
 	github.com/golang/mock v1.6.0
 	github.com/jmoiron/sqlx v1.3.5

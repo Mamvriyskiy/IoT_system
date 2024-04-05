@@ -16,6 +16,8 @@ func NewHandler(services *service.Services) *Handler {
 func (h *Handler) InitRouters() *gin.Engine {
 	router := gin.New()
 
+
+	// *TODO: middlewear
 	auth := router.Group("/auth")
 	auth.POST("/sign-up", h.signUp)
 	auth.POST("/sign-in", h.signIn)
