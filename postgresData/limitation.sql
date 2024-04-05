@@ -1,6 +1,4 @@
 ALTER TABLE client
-ALTER COLUMN clientID
-SET NOT NULL,
 ALTER COLUMN password
 SET NOT NULL,
 ALTER COLUMN login
@@ -13,8 +11,6 @@ ADD check (email != ''),
 ADD primary key (clientID);
 
 ALTER TABLE access
-ALTER COLUMN accessID
-SET NOT NULL,
 ALTER COLUMN accessStatus
 SET NOT NULL,
 ALTER COLUMN accessLevel
@@ -32,8 +28,6 @@ ADD FOREIGN KEY (accessID) REFERENCES access (accessID),
 ADD FOREIGN KEY (clientID) REFERENCES client (clientID);
 
 ALTER TABLE home
-ALTER COLUMN homeID
-SET NOT NULL,
 ALTER COLUMN name
 SET NOT NULL,
 ADD check (name != ''),
@@ -48,8 +42,6 @@ ADD FOREIGN KEY (accessID) REFERENCES access (accessID),
 ADD FOREIGN KEY (homeID) REFERENCES home (homeID);
 
 ALTER TABLE device
-ALTER COLUMN deviceID
-SET NOT NULL,
 ALTER COLUMN name
 SET NOT NULL,
 ALTER COLUMN typeDevice
@@ -80,8 +72,6 @@ ADD FOREIGN KEY (deviceID) REFERENCES device (deviceID),
 ADD FOREIGN KEY (homeID) REFERENCES home (homeID);
 
 ALTER TABLE historyDev
-ALTER COLUMN historyDevID
-SET NOT NULL,
 ALTER COLUMN timeWork
 SET NOT NULL,
 ALTER COLUMN AverageIndicator
