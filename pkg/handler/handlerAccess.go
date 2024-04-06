@@ -15,8 +15,8 @@ func (h *Handler) addUser(c *gin.Context) {
 		return
 	}
 
-	userID := 1
-	homeID := 1
+	userID := 2
+	homeID := 2
 	idAccess, err := h.services.IAccessHome.AddUser(homeID, userID, input)
 	fmt.Println(err)
 	if err != nil {
@@ -45,7 +45,7 @@ func (h *Handler) deleteUser(c *gin.Context) {
 }
 
 func (h *Handler) updateLevel(c *gin.Context) {
-	idUser := 0
+	idUser := 2
 	var input pkg.AccessHome
 	if err := c.BindJSON(&input); err != nil {
 		// *TODO: log
@@ -60,7 +60,7 @@ func (h *Handler) updateLevel(c *gin.Context) {
 }
 
 func (h *Handler) updateStatus(c *gin.Context) {
-	idUser := 0
+	idUser := 2
 	var input pkg.AccessHome
 	if err := c.BindJSON(&input); err != nil {
 		// *TODO: log
