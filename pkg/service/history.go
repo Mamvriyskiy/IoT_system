@@ -17,10 +17,6 @@ func (s *HistoryDeviceService) CreateDeviceHistory(deviceID int, history pkg.Dev
 	return s.repo.CreateDeviceHistory(deviceID, history)
 }
 
-func (s *HistoryDeviceService) UpdateDeviceHistory(idDevice int, history pkg.DevicesHistory) error {
-	return s.repo.UpdateDeviceHistory(idDevice, history)
-}
-
 func (s *HistoryDeviceService) GetDeviceHistory(idDevice int) ([]pkg.DevicesHistory, error) {
 	return s.repo.GetDeviceHistory(idDevice)
 }

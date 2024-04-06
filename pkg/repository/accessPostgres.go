@@ -38,10 +38,6 @@ func (r *AccessHomePostgres) AddUser(homeID, userID int, access pkg.AccessHome) 
 	return id, nil
 }
 
-func (r *AccessHomePostgres) DeleteUser(idUser int, access pkg.AccessHome) error {
-	
-	return nil
-}
 
 func (r *AccessHomePostgres) UpdateLevel(idUser int, access pkg.AccessHome) error {
 	query := fmt.Sprintf(`
@@ -71,6 +67,11 @@ func (r *AccessHomePostgres) UpdateLevel(idUser int, access pkg.AccessHome) erro
 	// }
 
 	return err
+}
+
+func (r *AccessHomePostgres) DeleteUser(idUser int, access pkg.AccessHome) error {
+	
+	return nil
 }
 
 func (r *AccessHomePostgres) UpdateStatus(idUser int, access pkg.AccessHome) error {

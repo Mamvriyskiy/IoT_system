@@ -14,7 +14,6 @@ func NewDevicePostgres(db *sqlx.DB) *DevicePostgres {
 	return &DevicePostgres{db: db}
 }
 
-
 func (r *DevicePostgres) CreateDevice(homeID int, device pkg.Devices) (int, error) {
 	var id int
 	fmt.Println("+")
@@ -35,17 +34,5 @@ func (r *DevicePostgres) CreateDevice(homeID int, device pkg.Devices) (int, erro
 }
 
 func (r *DevicePostgres) DeleteDevice(idDevice int, device pkg.Devices) error {
-	return nil
-}
-
-func (r *DevicePostgres) UpdateDevice(idDevice int, device pkg.Devices) error {
-	return nil
-}
-
-func (r *DevicePostgres) AddHomeDevice(idHome, idDevice int, input pkg.Devices) error {
-	return nil
-}
-
-func (r *DevicePostgres) DeleteHomeDevice(idHome, idDevice int, input pkg.Devices) error {
 	return nil
 }

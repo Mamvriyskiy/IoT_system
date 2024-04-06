@@ -37,13 +37,9 @@ func (h *Handler) InitRouters() *gin.Engine {
 	devices := router.Group(":id/device")
 	devices.POST("/", h.createDevice)
 	devices.DELETE("/:id", h.deleteDevice)
-	devices.PUT("/:id", h.updateDevice)
-	devices.POST("/:id/add", h.addHomeDevice)
-	devices.POST("/:id/del", h.deleteHomeDevice)
 
 	deviceHistory := router.Group(":id/device/:id/history")
 	deviceHistory.POST("/", h.createDeviceHistory)
-	deviceHistory.PUT("/:id", h.updateDeviceHistory)
 	deviceHistory.GET("/:id", h.getDeviceHistory)
 
 	return router

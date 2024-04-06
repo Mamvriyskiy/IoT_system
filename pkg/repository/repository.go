@@ -29,14 +29,10 @@ type IAccessHomeRepo interface {
 type IDeviceRepo interface {
 	CreateDevice(homeID int, device pkg.Devices) (int, error)
 	DeleteDevice(idDevice int, device pkg.Devices) error
-	UpdateDevice(idDevice int, device pkg.Devices) error
-	AddHomeDevice(idHome, idDevice int, input pkg.Devices) error
-	DeleteHomeDevice(idHome, idDevice int, input pkg.Devices) error
 }
 
 type IHistoryDeviceRepo interface {
 	CreateDeviceHistory(deviceID int, history pkg.DevicesHistory) (int, error)
-	UpdateDeviceHistory(idDevice int, history pkg.DevicesHistory) error
 	GetDeviceHistory(idDevice int) ([]pkg.DevicesHistory, error)
 }
 

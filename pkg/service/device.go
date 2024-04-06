@@ -22,15 +22,3 @@ func (s *DeviceService) CreateDevice(homeID int, device pkg.Devices) (int, error
 func (s *DeviceService) DeleteDevice(idDevice int, device pkg.Devices) error {
 	return s.repo.DeleteDevice(idDevice, device)
 }
-
-func (s *DeviceService) AddHomeDevice(idHome, idDevice int, device pkg.Devices) error {
-	return s.repo.AddHomeDevice(idHome, idDevice, device)
-}
-
-func (s *DeviceService) DeleteHomeDevice(idHome, idDevice int, device pkg.Devices) error {
-	return s.repo.DeleteHomeDevice(idHome, idDevice, device)
-}
-
-func (s *DeviceService) UpdateDevice(idDevice int, device pkg.Devices) error {
-	return s.repo.UpdateDevice(idDevice, device)
-}

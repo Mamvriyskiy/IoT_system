@@ -30,9 +30,6 @@ func (r *DeviceHistoryPostgres) CreateDeviceHistory(deviceID int, device pkg.Dev
 	return id, nil
 }
 
-func (r *DeviceHistoryPostgres) UpdateDeviceHistory(id int, history pkg.DevicesHistory) error {
-	return nil
-}
 
 func (r *DeviceHistoryPostgres) GetDeviceHistory(idDevice int) ([]pkg.DevicesHistory, error) {
 	return nil, nil
