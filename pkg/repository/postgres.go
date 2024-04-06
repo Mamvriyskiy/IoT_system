@@ -22,8 +22,9 @@ func NewPostgresDB(cfg Config) (*sqlx.DB, error) {
 	if err != nil {
         return nil, err
     }
-
+	fmt.Println("1) ",err)
 	err = db.Ping()
+	fmt.Println("2) ",err)
 	if err != nil {
 		return nil, err
 	}

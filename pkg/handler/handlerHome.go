@@ -3,6 +3,8 @@ package handler
 import (
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"fmt"
 )
 
 func (h *Handler) createHome(c *gin.Context) {
@@ -11,21 +13,24 @@ func (h *Handler) createHome(c *gin.Context) {
 	// 	// *TODO: log
 	// 	return
 	// }
-
+	fmt.Println("+")
 	var input pkg.Home
 	if err := c.BindJSON(&input); err != nil {
 		// *TODO: log
 		return
 	}
 
-	id := 0
+	id := 1
 	idHome, err := h.services.IHome.CreateHome(id, input)
+	fmt.Println(err)
 	if err != nil {
 		// *TODO log
 		return
 	}
 
-	_ = idHome
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"homeId":idHome,
+	})
 }
 
 func (h *Handler) deleteHome(c *gin.Context) {

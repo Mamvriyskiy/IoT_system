@@ -3,6 +3,8 @@ package handler
 import (
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"fmt"
 )
 
 func (h *Handler) createDeviceHistory(c *gin.Context) {
@@ -11,20 +13,24 @@ func (h *Handler) createDeviceHistory(c *gin.Context) {
 	// 	// *TODO: log
 	// 	return
 	// }
-
+	fmt.Println("+")
 	var input pkg.DevicesHistory
 	if err := c.BindJSON(&input); err != nil {
 		// *TODO: log
 		return
 	}
 
-	idHistory, err := h.services.IHistoryDevice.CreateDeviceHistory(input)
+	deviceID := 1
+	idHistory, err := h.services.IHistoryDevice.CreateDeviceHistory(deviceID, input)
+	fmt.Println(err)
 	if err != nil {
 		// *TODO log
 		return
 	}
 
-	_ = idHistory
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"idHistory":idHistory,
+	})
 }
 
 func (h *Handler) updateDeviceHistory(c *gin.Context) {

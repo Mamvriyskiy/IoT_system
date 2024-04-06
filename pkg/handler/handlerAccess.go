@@ -3,22 +3,30 @@ package handler
 import (
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"fmt"
 )
 
 func (h *Handler) addUser(c *gin.Context) {
 	var input pkg.AccessHome
 	if err := c.BindJSON(&input); err != nil {
+		fmt.Println(err)
 		// *TODO: log
 		return
 	}
 
-	idAccess, err := h.services.IAccessHome.AddUser(input)
+	userID := 1
+	homeID := 1
+	idAccess, err := h.services.IAccessHome.AddUser(homeID, userID, input)
+	fmt.Println(err)
 	if err != nil {
 		// *TODO log
 		return
 	}
 
-	_ = idAccess
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"accessID":idAccess,
+	})
 }
 
 func (h *Handler) deleteUser(c *gin.Context) {

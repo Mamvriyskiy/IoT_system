@@ -11,6 +11,7 @@ import (
 
 func (h *Handler) signUp(c *gin.Context) {
 	var input pkg.User
+	fmt.Println("+")
 
 	if err := c.BindJSON(&input); err != nil {
 		// *TODO: log
@@ -18,7 +19,7 @@ func (h *Handler) signUp(c *gin.Context) {
 	}
 
 	id, err := h.services.IUser.CreateUser(input)
-	//fmt.Println(id, err)
+	fmt.Println(err)
 	if err != nil {
 		// *TODO log
 		return

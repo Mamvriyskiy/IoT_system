@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS device (
 CREATE TABLE IF NOT EXISTS deviceHome (homeID int, deviceID int);
 
 CREATE TABLE IF NOT EXISTS historyDev (
-    historyDevID SERIAL, timeWork time, AverageIndicator decimal, EnergyConsumed int
+    historyDevID SERIAL, timeWork int, AverageIndicator decimal, EnergyConsumed int
 );
 
 CREATE TABLE IF NOT EXISTS historyDevice (

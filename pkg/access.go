@@ -2,6 +2,6 @@ package pkg
 
 type AccessHome struct {
 	ID           int  `json:"-" db:"accessID"`
-	AccessStatus bool `json:"status"`
+	AccessStatus string `json:"status"`
 	AccessLevel  int  `json:"level"`
 }

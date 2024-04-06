@@ -13,8 +13,8 @@ func NewAccessHomeService(repo repository.IAccessHomeRepo) *AccessHomeService {
 	return &AccessHomeService{repo: repo}
 }
 
-func (s *AccessHomeService) AddUser(access pkg.AccessHome) (int, error) {
-	return s.repo.AddUser(access)
+func (s *AccessHomeService) AddUser(homeID, userID int, access pkg.AccessHome) (int, error) {
+	return s.repo.AddUser(homeID, userID, access)
 }
 
 func (s *AccessHomeService) DeleteUser(idUser int, access pkg.AccessHome) error {

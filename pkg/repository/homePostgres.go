@@ -17,7 +17,7 @@ func NewHomePostgres(db *sqlx.DB) *HomePostgres {
 func (r *HomePostgres) CreateHome(ownerID int, home pkg.Home) (int, error) {
 	var id int
 	query := fmt.Sprintf("INSERT INTO %s (ownerid, name) values ($1, $2) RETURNING homeID", "home")
-	row := r.db.QueryRow(query, ownerID, home.name)
+	row := r.db.QueryRow(query, ownerID, home.Name)
 	if err := row.Scan(&id); err != nil {
 		return 0, err
 	}
