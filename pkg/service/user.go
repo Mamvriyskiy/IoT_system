@@ -5,10 +5,9 @@ import (
 	"encoding/hex"
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
-
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository"
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
 const (

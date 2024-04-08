@@ -31,6 +31,5 @@ func (r *UserPostgres) GetUser(login, password string) (pkg.User, error) {
 	query := fmt.Sprintf("SELECT clientid from %s where login = $1 and password = $2", "client")
 	err := r.db.Get(&user, query, login, password)
 
-	fmt.Println(user, err)
 	return user, err
 }

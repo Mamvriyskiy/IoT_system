@@ -44,7 +44,7 @@ func TestCheckUser(t *testing.T) {
 		Username: "username",
 		Email:    "qwerty@mail.ru",
 		Password: "qwerty",
-		ID: 123,
+		ID:       123,
 	}
 
 	mockRepo.EXPECT().GetUser(user.Username, user.Password).Return(user, nil)

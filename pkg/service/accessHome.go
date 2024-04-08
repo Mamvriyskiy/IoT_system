@@ -17,8 +17,8 @@ func (s *AccessHomeService) AddUser(homeID, userID int, access pkg.AccessHome) (
 	return s.repo.AddUser(homeID, userID, access)
 }
 
-func (s *AccessHomeService) DeleteUser(idUser int, access pkg.AccessHome) error {
-	return s.repo.DeleteUser(idUser, access)
+func (s *AccessHomeService) DeleteUser(idUser int) error {
+	return s.repo.DeleteUser(idUser)
 }
 
 func (s *AccessHomeService) UpdateLevel(idUser int, access pkg.AccessHome) error {
@@ -29,6 +29,6 @@ func (s *AccessHomeService) UpdateStatus(idUser int, access pkg.AccessHome) erro
 	return s.repo.UpdateStatus(idUser, access)
 }
 
-func (s *AccessHomeService) GetListUserHome(idHome int, access pkg.AccessHome) ([]pkg.User, error) {
-	return s.repo.GetListUserHome(idHome, access)
+func (s *AccessHomeService) GetListUserHome(idHome int) ([]pkg.ClientHome, error) {
+	return s.repo.GetListUserHome(idHome)
 }

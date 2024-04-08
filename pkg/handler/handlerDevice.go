@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
@@ -14,7 +13,6 @@ func (h *Handler) createDevice(c *gin.Context) {
 	// 	// *TODO: log
 	// 	return
 	// }
-	fmt.Println("+")
 
 	var input pkg.Devices
 	if err := c.BindJSON(&input); err != nil {
@@ -22,11 +20,8 @@ func (h *Handler) createDevice(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(h.services.IDevice)
-	fmt.Println("+")
 	homeID := 1
 	idDevice, err := h.services.IDevice.CreateDevice(homeID, input)
-	fmt.Println(err)
 	if err != nil {
 		// *TODO log
 		return
@@ -44,17 +39,10 @@ func (h *Handler) deleteDevice(c *gin.Context) {
 	// 	return
 	// }
 
-	var input pkg.Devices
-	if err := c.BindJSON(&input); err != nil {
-		// *TODO: log
-		return
-	}
-
-	idDevice := 0
-	err := h.services.IDevice.DeleteDevice(idDevice, input)
+	idDevice := 1
+	err := h.services.IDevice.DeleteDevice(idDevice)
 	if err != nil {
 		// *TODO log
 		return
 	}
 }
-

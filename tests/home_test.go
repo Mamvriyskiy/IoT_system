@@ -39,16 +39,11 @@ func TestDeleteHome(t *testing.T) {
 
 	mockRepo := mocks_service.NewMockIHomeRepo(ctrl)
 
-	home := pkg.Home{
-		Name:    "home",
-		OwnerID: 20,
-	}
-
-	mockRepo.EXPECT().DeleteHome(10, home).Return(nil)
+	mockRepo.EXPECT().DeleteHome(10).Return(nil)
 
 	homeService := service.NewHomeService(mockRepo)
 
-	err := homeService.DeleteHome(10, home)
+	err := homeService.DeleteHome(10)
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
@@ -61,15 +56,16 @@ func TestUpdateHome(t *testing.T) {
 	mockRepo := mocks_service.NewMockIHomeRepo(ctrl)
 
 	home := pkg.Home{
+		ID:      1,
 		Name:    "home",
 		OwnerID: 20,
 	}
 
-	mockRepo.EXPECT().UpdateHome(10, home).Return(nil)
+	mockRepo.EXPECT().UpdateHome(home).Return(nil)
 
 	homeService := service.NewHomeService(mockRepo)
 
-	err := homeService.UpdateHome(10, home)
+	err := homeService.UpdateHome(home)
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}

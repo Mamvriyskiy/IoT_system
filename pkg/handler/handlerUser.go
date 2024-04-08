@@ -1,8 +1,6 @@
 package handler
 
 import (
-	//"fmt"
-	"fmt"
 	"net/http"
 
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
@@ -11,7 +9,6 @@ import (
 
 func (h *Handler) signUp(c *gin.Context) {
 	var input pkg.User
-	fmt.Println("+")
 
 	if err := c.BindJSON(&input); err != nil {
 		// *TODO: log
@@ -19,14 +16,13 @@ func (h *Handler) signUp(c *gin.Context) {
 	}
 
 	id, err := h.services.IUser.CreateUser(input)
-	fmt.Println(err)
 	if err != nil {
 		// *TODO log
 		return
 	}
 
 	c.JSON(http.StatusOK, map[string]interface{}{
-		"id":id,
+		"id": id,
 	})
 }
 
@@ -46,9 +42,8 @@ func (h *Handler) signIn(c *gin.Context) {
 	if err != nil {
 		// *TODO log
 		return
-	}	
-	
-	fmt.Println(token)
+	}
+
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"token": token,
 	})

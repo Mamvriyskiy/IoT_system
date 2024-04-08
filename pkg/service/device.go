@@ -3,7 +3,6 @@ package service
 import (
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository"
-	"fmt"
 )
 
 type DeviceService struct {
@@ -15,10 +14,13 @@ func NewDeviceService(repo repository.IDeviceRepo) *DeviceService {
 }
 
 func (s *DeviceService) CreateDevice(homeID int, device pkg.Devices) (int, error) {
-	fmt.Println("+")
 	return s.repo.CreateDevice(homeID, device)
 }
 
-func (s *DeviceService) DeleteDevice(idDevice int, device pkg.Devices) error {
-	return s.repo.DeleteDevice(idDevice, device)
+func (s *DeviceService) DeleteDevice(idDevice int) error {
+	return s.repo.DeleteDevice(idDevice)
+}
+
+func (s *DeviceService) GetDeviceByID(deviceID int) (pkg.Devices, error) {
+	return s.repo.GetDeviceByID(deviceID)
 }

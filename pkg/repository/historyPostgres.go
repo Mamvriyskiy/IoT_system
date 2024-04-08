@@ -1,9 +1,10 @@
 package repository
 
 import (
+	"fmt"
+
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/jmoiron/sqlx"
-	"fmt"
 )
 
 type DeviceHistoryPostgres struct {
@@ -14,7 +15,6 @@ func NewDeviceHistoryPostgres(db *sqlx.DB) *DeviceHistoryPostgres {
 	return &DeviceHistoryPostgres{db: db}
 }
 
-
 func (r *DeviceHistoryPostgres) CreateDeviceHistory(deviceID int, device pkg.DevicesHistory) (int, error) {
 	var id int
 	query := fmt.Sprintf("INSERT INTO %s (timeWork, AverageIndicator, EnergyConsumed) values ($1, $2, $3) RETURNING historyDevID", "historyDev")
@@ -24,13 +24,36 @@ func (r *DeviceHistoryPostgres) CreateDeviceHistory(deviceID int, device pkg.Dev
 		return 0, err
 	}
 
-	query2 := fmt.Sprintf("INSERT INTO %s (deviceID, historydevID) VALUES ($1, $2)", "historydevice")
-	r.db.QueryRow(query2, deviceID, id)
+	query = fmt.Sprintf("INSERT INTO %s (deviceID, historydevID) VALUES ($1, $2)", "historydevice")
+	// r.db.QueryRow(query2, deviceID, id)
+	result, err := r.db.Exec(query, deviceID, id)
+	if err != nil {
+		// Обработка ошибки, если запрос не удалось выполнить
+		return 0, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		// Обработка ошибки, если не удалось получить количество затронутых строк
+		
+		return 0, err
+	}
+
+	if rowsAffected == 0 {
+		
+		return 0, nil
+	}
 
 	return id, nil
 }
 
-
 func (r *DeviceHistoryPostgres) GetDeviceHistory(idDevice int) ([]pkg.DevicesHistory, error) {
-	return nil, nil
+	var lists []pkg.DevicesHistory
+	query := fmt.Sprintf("select hi.timework, hi.averageindicator, hi.energyconsumed from %s as hi join %s as hd on hi.historydevid = hd.historydevid where hd.deviceid = $1", "historydev", "historydevice")
+	err := r.db.Select(&lists, query, idDevice)
+	if err != nil {
+		return nil, err
+	}
+
+	return lists, nil
 }

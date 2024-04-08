@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"github.com/joho/godotenv"
-	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
-	handler "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/handler"
+
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/handler"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/service"
+	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
 

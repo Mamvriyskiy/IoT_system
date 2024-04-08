@@ -1,10 +1,10 @@
 package handler
 
 import (
+	"net/http"
+
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
-	"net/http"
-	"fmt"
 )
 
 func (h *Handler) createHome(c *gin.Context) {
@@ -13,7 +13,6 @@ func (h *Handler) createHome(c *gin.Context) {
 	// 	// *TODO: log
 	// 	return
 	// }
-	fmt.Println("+")
 	var input pkg.Home
 	if err := c.BindJSON(&input); err != nil {
 		// *TODO: log
@@ -22,14 +21,13 @@ func (h *Handler) createHome(c *gin.Context) {
 
 	id := 1
 	idHome, err := h.services.IHome.CreateHome(id, input)
-	fmt.Println(err)
 	if err != nil {
 		// *TODO log
 		return
 	}
 
 	c.JSON(http.StatusOK, map[string]interface{}{
-		"homeId":idHome,
+		"homeId": idHome,
 	})
 }
 
@@ -39,21 +37,12 @@ func (h *Handler) deleteHome(c *gin.Context) {
 	// 	// *TODO: log
 	// 	return
 	// }
-
-	var input pkg.Home
-	if err := c.BindJSON(&input); err != nil {
-		// *TODO: log
-		return
-	}
-
-	idUser := 0
-	err := h.services.IHome.DeleteHome(idUser, input)
+	homeID := 1
+	err := h.services.IHome.DeleteHome(homeID)
 	if err != nil {
 		// *TODO log
 		return
 	}
-
-	_ = idUser
 }
 
 func (h *Handler) updateHome(c *gin.Context) {
@@ -63,14 +52,15 @@ func (h *Handler) updateHome(c *gin.Context) {
 	// 	return
 	// }
 
-	idUser := 0
 	var input pkg.Home
 	if err := c.BindJSON(&input); err != nil {
 		// *TODO: log
 		return
 	}
 
-	err := h.services.IHome.UpdateHome(idUser, input)
+	input.ID = 1
+
+	err := h.services.IHome.UpdateHome(input)
 	if err != nil {
 		// *TODO log
 		return

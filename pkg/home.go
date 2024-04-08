@@ -1,7 +1,7 @@
 package pkg
 
 type Home struct {
-	Name    string `json:"name"`
-	OwnerID int    `json:"ownerId"`
-	ID      int    `json:"-"`
+	Name    string `db:"name"    json:"name"`
+	OwnerID int    `db:"ownerid" json:"ownerId"`
+	ID      int    `db:"homeid"  json:"-"`
 }

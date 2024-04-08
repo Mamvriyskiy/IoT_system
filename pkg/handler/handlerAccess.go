@@ -1,43 +1,36 @@
 package handler
 
 import (
+	"net/http"
+
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
-	"net/http"
-	"fmt"
 )
 
 func (h *Handler) addUser(c *gin.Context) {
 	var input pkg.AccessHome
 	if err := c.BindJSON(&input); err != nil {
-		fmt.Println(err)
 		// *TODO: log
 		return
 	}
 
-	userID := 2
-	homeID := 2
+	userID := 1
+	homeID := 1
 	idAccess, err := h.services.IAccessHome.AddUser(homeID, userID, input)
-	fmt.Println(err)
 	if err != nil {
 		// *TODO log
 		return
 	}
 
 	c.JSON(http.StatusOK, map[string]interface{}{
-		"accessID":idAccess,
+		"accessID": idAccess,
 	})
 }
 
 func (h *Handler) deleteUser(c *gin.Context) {
-	idUser := 0
-	var input pkg.AccessHome
-	if err := c.BindJSON(&input); err != nil {
-		// *TODO: log
-		return
-	}
+	idUser := 1
 
-	err := h.services.IAccessHome.DeleteUser(idUser, input)
+	err := h.services.IAccessHome.DeleteUser(idUser)
 	if err != nil {
 		// *TODO log
 		return
@@ -74,19 +67,19 @@ func (h *Handler) updateStatus(c *gin.Context) {
 	}
 }
 
-func (h *Handler) getListUserHome(c *gin.Context) {
-	homeID := 0
-	var input pkg.AccessHome
-	if err := c.BindJSON(&input); err != nil {
-		// *TODO: log
-		return
-	}
+type getAlllistUserResponse struct {
+	Data []pkg.ClientHome `json:"Data"`
+}
 
-	listUser, err := h.services.IAccessHome.GetListUserHome(homeID, input)
+func (h *Handler) getListUserHome(c *gin.Context) {
+	homeID := 1
+	listUser, err := h.services.IAccessHome.GetListUserHome(homeID)
 	if err != nil {
 		// *TODO log
 		return
 	}
 
-	_ = listUser
+	c.JSON(http.StatusOK, getAlllistUserResponse{
+		Data: listUser,
+	})
 }
