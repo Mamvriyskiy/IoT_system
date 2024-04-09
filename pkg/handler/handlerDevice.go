@@ -21,7 +21,7 @@ func (h *Handler) createDevice(c *gin.Context) {
 	}
 
 	homeID := 1
-	idDevice, err := h.services.IDevice.CreateDevice(homeID, input)
+	idDevice, err := h.services.IDevice.CreateDevice(homeID, &input)
 	if err != nil {
 		// *TODO log
 		return

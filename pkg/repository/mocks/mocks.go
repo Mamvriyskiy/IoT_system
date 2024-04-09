@@ -264,7 +264,7 @@ func (m *MockIDeviceRepo) EXPECT() *MockIDeviceRepoMockRecorder {
 }
 
 // CreateDevice mocks base method.
-func (m *MockIDeviceRepo) CreateDevice(homeID int, device pkg.Devices) (int, error) {
+func (m *MockIDeviceRepo) CreateDevice(homeID int, device *pkg.Devices) (int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDevice", homeID, device)
 	ret0, _ := ret[0].(int)

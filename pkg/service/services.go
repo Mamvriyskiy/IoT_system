@@ -27,7 +27,7 @@ type IAccessHome interface {
 }
 
 type IDevice interface {
-	CreateDevice(homeID int, device pkg.Devices) (int, error)
+	CreateDevice(homeID int, device *pkg.Devices) (int, error)
 	DeleteDevice(idDevice int) error
 	GetDeviceByID(deviceID int) (pkg.Devices, error)
 }

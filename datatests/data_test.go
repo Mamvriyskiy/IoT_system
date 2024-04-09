@@ -25,7 +25,7 @@ func createDB() (*sqlx.DB, error) {
 		return nil, err
 	}
 
-	db, err := repository.NewPostgresDB(repository.Config{
+	db, err := repository.NewPostgresDB(&repository.Config{
 		Host:     viper.GetString("db.host"),
 		Port:     viper.GetString("db.port"),
 		Username: viper.GetString("db.username"),
@@ -98,7 +98,8 @@ func TestDeviceData(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		deviceID, err := devicePostgres.CreateDevice(tc.HomeID, tc.Devices)
+		device := tc.Devices
+		deviceID, err := devicePostgres.CreateDevice(tc.HomeID, &device)
 		require.NoError(t, err)
 
 		res, err := devicePostgres.GetDeviceByID(deviceID)

@@ -27,33 +27,33 @@ func (r *HomePostgres) CreateHome(ownerID int, home pkg.Home) (int, error) {
 }
 
 func (r *HomePostgres) DeleteHome(homeID int) error {
-	query1 := fmt.Sprintf(`DELETE FROM access 
+	query1 := `DELETE FROM access 
 		WHERE accessid IN (SELECT accessid 
-			FROM accesshome WHERE homeid = $1);`)
+			FROM accesshome WHERE homeid = $1);`
 	_, err := r.db.Exec(query1, homeID)
 	if err != nil {
 		return err
 	}
 
-	query2 := fmt.Sprintf(`DELETE FROM historydev 
+	query2 := `DELETE FROM historydev 
 		WHERE historydevid IN (SELECT historydevid 
 			FROM historydevice WHERE deviceid 
-				IN (SELECT deviceid FROM devicehome WHERE homeid = $1));`)
+				IN (SELECT deviceid FROM devicehome WHERE homeid = $1));`
 	_, err = r.db.Exec(query2, homeID)
 	if err != nil {
 		return err
 	}
 
-	query3 := fmt.Sprintf(`DELETE FROM device 
+	query3 := `DELETE FROM device 
 		WHERE deviceid IN (SELECT deviceid 
-			FROM devicehome WHERE homeid = $1);`)
+			FROM devicehome WHERE homeid = $1);`
 	_, err = r.db.Exec(query3, homeID)
 	if err != nil {
 		return err
 	}
 
-	query4 := fmt.Sprintf(`DELETE FROM home
-		WHERE homeid = $1;`)
+	query4 := `DELETE FROM home
+		WHERE homeid = $1;`
 	_, err = r.db.Exec(query4, homeID)
 	if err != nil {
 		return err
@@ -63,10 +63,9 @@ func (r *HomePostgres) DeleteHome(homeID int) error {
 }
 
 func (r *HomePostgres) UpdateHome(home pkg.Home) error {
-	query := fmt.Sprintf(`
-	UPDATE home
+	query := `UPDATE home
 		SET name = $1
-		WHERE homeid = $2;`)
+		WHERE homeid = $2;`
 	result, err := r.db.Exec(query, home.Name, home.ID)
 	if err != nil {
 		// Обработка ошибки, если запрос не удалось выполнить

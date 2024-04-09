@@ -54,24 +54,24 @@ func (r *AccessHomePostgres) AddUser(homeID, userID int, access pkg.AccessHome) 
 }
 
 func (r *AccessHomePostgres) UpdateLevel(idUser int, access pkg.AccessHome) error {
-	query := fmt.Sprintf(`
+	query := `
 	UPDATE access
 	SET accesslevel = $1
 	WHERE accessid = (
 		SELECT accessid FROM accessclient WHERE clientid = $2
-	);`)
+	);`
 	_, err := r.db.Exec(query, access.AccessLevel, idUser)
 
 	return err
 }
 
 func (r *AccessHomePostgres) UpdateStatus(idUser int, access pkg.AccessHome) error {
-	query := fmt.Sprintf(`
+	query := `
 	UPDATE access
 		SET accessstatus = $1
 			WHERE accessid = (
 				SELECT accessid FROM accessclient WHERE clientid = $2
-	);`)
+	);`
 	_, err := r.db.Exec(query, access.AccessStatus, idUser)
 
 	return err
@@ -79,11 +79,11 @@ func (r *AccessHomePostgres) UpdateStatus(idUser int, access pkg.AccessHome) err
 
 func (r *AccessHomePostgres) GetListUserHome(idHome int) ([]pkg.ClientHome, error) {
 	var lists []pkg.ClientHome
-	query := fmt.Sprintf(`select c.login, a.accesslevel, a.accessstatus from client c 
-							join accessclient ac on c.clientid = ac.clientid
-								join access a on a.accessid = ac.accessid 
-									join accesshome ah on ah.accessid = a.accessid 
-										where ah.homeid = $1;`)
+	query := `select c.login, a.accesslevel, a.accessstatus from client c 
+				join accessclient ac on c.clientid = ac.clientid
+					join access a on a.accessid = ac.accessid 
+						join accesshome ah on ah.accessid = a.accessid 
+							where ah.homeid = $1;`
 	err := r.db.Select(&lists, query, idHome)
 	if err != nil {
 		return nil, err
@@ -93,10 +93,10 @@ func (r *AccessHomePostgres) GetListUserHome(idHome int) ([]pkg.ClientHome, erro
 }
 
 func (r *AccessHomePostgres) DeleteUser(idUser int) error {
-	query := fmt.Sprintf(`DELETE FROM access 
-								where accessid 
-									in (select accessid 
-											from accessclient where clientid = $1);`)
+	query := `DELETE FROM access 
+				where accessid 
+					in (select accessid 
+							from accessclient where clientid = $1);`
 	_, err := r.db.Exec(query, idUser)
 
 	return err

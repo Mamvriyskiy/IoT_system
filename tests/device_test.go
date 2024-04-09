@@ -26,11 +26,11 @@ func TestCreateDevice(t *testing.T) {
 	}
 
 	homeID := 1
-	mockRepo.EXPECT().CreateDevice(homeID, device).Return(10, nil)
+	mockRepo.EXPECT().CreateDevice(homeID, &device).Return(10, nil)
 
 	deviceService := service.NewDeviceService(mockRepo)
 
-	deviceID, err := deviceService.CreateDevice(homeID, device)
+	deviceID, err := deviceService.CreateDevice(homeID, &device)
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}

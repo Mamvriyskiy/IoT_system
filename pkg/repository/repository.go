@@ -28,7 +28,7 @@ type IAccessHomeRepo interface {
 }
 
 type IDeviceRepo interface {
-	CreateDevice(homeID int, device pkg.Devices) (int, error)
+	CreateDevice(homeID int, device *pkg.Devices) (int, error)
 	DeleteDevice(idDevice int) error
 	GetDeviceByID(deviceID int) (pkg.Devices, error)
 }

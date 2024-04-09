@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -24,7 +23,7 @@ func main() {
 		return
 	}
 
-	db, err := repository.NewPostgresDB(repository.Config{
+	db, err := repository.NewPostgresDB(&repository.Config{
 		Host:     viper.GetString("db.host"),
 		Port:     viper.GetString("db.port"),
 		Username: viper.GetString("db.username"),

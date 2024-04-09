@@ -15,7 +15,7 @@ func NewDevicePostgres(db *sqlx.DB) *DevicePostgres {
 	return &DevicePostgres{db: db}
 }
 
-func (r *DevicePostgres) CreateDevice(homeID int, device pkg.Devices) (int, error) {
+func (r *DevicePostgres) CreateDevice(homeID int, device *pkg.Devices) (int, error) {
 	var id int
 	query := fmt.Sprintf(`INSERT INTO %s (name, TypeDevice, Status, 
 		Brand, PowerConsumption, MinParametr, MaxParametr) 
@@ -38,18 +38,18 @@ func (r *DevicePostgres) CreateDevice(homeID int, device pkg.Devices) (int, erro
 }
 
 func (r *DevicePostgres) DeleteDevice(idDevice int) error {
-	query := fmt.Sprintf(`DELETE FROM historydev
+	query := `DELETE FROM historydev
 			WHERE historydevid IN 
 				(SELECT h2.historydevid FROM historydevice h2 
-					WHERE h2.deviceid = $1);`)
+					WHERE h2.deviceid = $1);`
 
 	_, err := r.db.Exec(query, idDevice)
 	if err != nil {
 		return err
 	}
 
-	query = fmt.Sprintf(`DELETE FROM device 
-							where deviceid = $1;`)
+	query = `DELETE FROM device 
+							where deviceid = $1;`
 	_, err = r.db.Exec(query, idDevice)
 	if err != nil {
 		return err

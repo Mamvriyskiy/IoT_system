@@ -13,7 +13,7 @@ func NewDeviceService(repo repository.IDeviceRepo) *DeviceService {
 	return &DeviceService{repo: repo}
 }
 
-func (s *DeviceService) CreateDevice(homeID int, device pkg.Devices) (int, error) {
+func (s *DeviceService) CreateDevice(homeID int, device *pkg.Devices) (int, error) {
 	return s.repo.CreateDevice(homeID, device)
 }
 
