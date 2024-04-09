@@ -32,9 +32,7 @@ func main() {
 		DBName:   viper.GetString("db.dbname"),
 		SSLMode:  viper.GetString("db.sslmode"),
 	})
-
 	if err != nil {
-		fmt.Println("no connect DB", err)
 		return
 	}
 	repos := repository.NewRepository(db)

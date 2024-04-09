@@ -17,7 +17,8 @@ func NewAccessHomePostgres(db *sqlx.DB) *AccessHomePostgres {
 
 func (r *AccessHomePostgres) AddUser(homeID, userID int, access pkg.AccessHome) (int, error) {
 	var id int
-	query := fmt.Sprintf("INSERT INTO %s (accessStatus, accessLevel) values ($1, $2) RETURNING accessID", "access")
+	query := fmt.Sprintf(`INSERT INTO %s (accessStatus, accessLevel) 
+		values ($1, $2) RETURNING accessID`, "access")
 	row := r.db.QueryRow(query, access.AccessStatus, access.AccessLevel)
 	err := row.Scan(&id)
 	if err != nil {
@@ -35,12 +36,11 @@ func (r *AccessHomePostgres) AddUser(homeID, userID int, access pkg.AccessHome) 
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
 		// Обработка ошибки, если не удалось получить количество затронутых строк
-		
+
 		return 0, err
 	}
 
 	if rowsAffected == 0 {
-		fmt.Println("Не было обновлено ни одной строки")
 		return 0, nil
 	}
 

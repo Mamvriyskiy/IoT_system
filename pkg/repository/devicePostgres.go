@@ -17,8 +17,12 @@ func NewDevicePostgres(db *sqlx.DB) *DevicePostgres {
 
 func (r *DevicePostgres) CreateDevice(homeID int, device pkg.Devices) (int, error) {
 	var id int
-	query := fmt.Sprintf("INSERT INTO %s (name, TypeDevice, Status, Brand, PowerConsumption, MinParametr, MaxParametr) values ($1, $2, $3, $4, $5, $6, $7) RETURNING deviceID", "device")
-	row := r.db.QueryRow(query, device.Name, device.TypeDevice, device.Status, device.Brand, device.PowerConsumption, device.MinParameter, device.MaxParameter)
+	query := fmt.Sprintf(`INSERT INTO %s (name, TypeDevice, Status, 
+		Brand, PowerConsumption, MinParametr, MaxParametr) 
+			values ($1, $2, $3, $4, $5, $6, $7) RETURNING deviceID`, "device")
+	row := r.db.QueryRow(query, device.Name, device.TypeDevice,
+		device.Status, device.Brand, device.PowerConsumption,
+		device.MinParameter, device.MaxParameter)
 	err := row.Scan(&id)
 	if err != nil {
 		return 0, err
@@ -40,10 +44,16 @@ func (r *DevicePostgres) DeleteDevice(idDevice int) error {
 					WHERE h2.deviceid = $1);`)
 
 	_, err := r.db.Exec(query, idDevice)
+	if err != nil {
+		return err
+	}
 
 	query = fmt.Sprintf(`DELETE FROM device 
 							where deviceid = $1;`)
 	_, err = r.db.Exec(query, idDevice)
+	if err != nil {
+		return err
+	}
 
 	return err
 }

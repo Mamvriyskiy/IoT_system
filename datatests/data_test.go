@@ -11,6 +11,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func createDB() (*sqlx.DB, error) {
@@ -38,14 +39,14 @@ func createDB() (*sqlx.DB, error) {
 
 func TestHomeData(t *testing.T) {
 	db, err := createDB()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	homePostgres := repository.NewHomePostgres(db)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	testCases := []struct {
-		OwnerID int
 		Home    pkg.Home
+		OwnerID int
 	}{
 		{OwnerID: 1, Home: pkg.Home{Name: "home1"}},
 		{OwnerID: 2, Home: pkg.Home{Name: "home2"}},
@@ -54,10 +55,10 @@ func TestHomeData(t *testing.T) {
 
 	for _, tc := range testCases {
 		homeID, err := homePostgres.CreateHome(tc.OwnerID, tc.Home)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 
 		res, err := homePostgres.GetHomeByID(homeID)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.Equal(t, tc.Home.Name, res.Name)
 		assert.Equal(t, tc.OwnerID, res.OwnerID)
 	}
@@ -65,13 +66,13 @@ func TestHomeData(t *testing.T) {
 
 func TestDeviceData(t *testing.T) {
 	db, err := createDB()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	devicePostgres := repository.NewDevicePostgres(db)
 
 	testCases := []struct {
-		HomeID  int
 		Devices pkg.Devices
+		HomeID  int
 	}{
 		{
 			HomeID: 10,
@@ -98,10 +99,10 @@ func TestDeviceData(t *testing.T) {
 
 	for _, tc := range testCases {
 		deviceID, err := devicePostgres.CreateDevice(tc.HomeID, tc.Devices)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 
 		res, err := devicePostgres.GetDeviceByID(deviceID)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.Equal(t, tc.Devices.Name, res.Name)
 		assert.Equal(t, tc.Devices.TypeDevice, res.TypeDevice)
 		assert.Equal(t, tc.Devices.Status, res.Status)
@@ -114,18 +115,18 @@ func TestDeviceData(t *testing.T) {
 
 func TestAccessData(t *testing.T) {
 	db, err := createDB()
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	homePostgres := repository.NewHomePostgres(db)
 	accessPostgres := repository.NewAccessHomePostgres(db)
 	userPostgres := repository.NewUserPostgres(db)
 
 	testCases := []struct {
-		OwnerID  int
-		Home     pkg.Home
 		Users    []pkg.User
 		Access   []pkg.AccessHome
 		Expected []pkg.ClientHome
+		Home     pkg.Home
+		OwnerID  int
 	}{
 		{
 			OwnerID: 1,
@@ -147,19 +148,20 @@ func TestAccessData(t *testing.T) {
 
 	for _, tc := range testCases {
 		homeID, err := homePostgres.CreateHome(tc.OwnerID, tc.Home)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 
 		for i := range tc.Users {
 			tc.Users[i].ID, err = userPostgres.CreateUser(tc.Users[i])
-			assert.NoError(t, err)
+			require.NoError(t, err)
 		}
 
 		for j := range tc.Access {
 			tc.Access[j].ID, err = accessPostgres.AddUser(homeID, tc.Users[j].ID, tc.Access[j])
-			assert.NoError(t, err)
+			require.NoError(t, err)
 		}
 
 		res, err := accessPostgres.GetListUserHome(homeID)
+		require.NoError(t, err)
 		if !reflect.DeepEqual(tc.Expected, res) {
 			t.Errorf("Ожидаемый: %v, Фактический: %v", tc.Expected, res)
 		}

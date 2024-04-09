@@ -45,7 +45,7 @@ func (s *UserService) CheckUser(user pkg.User) (id int, err error) {
 
 type tokenClaims struct {
 	jwt.StandardClaims
-	UserID int `json" "user_id"`
+	UserID int `json:"userid"`
 }
 
 func (s *UserService) GenerateToken(login, password string) (string, error) {

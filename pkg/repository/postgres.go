@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
+	// Импорт драйвера PostgreSQL для его регистрации.
 	_ "github.com/lib/pq"
 )
 

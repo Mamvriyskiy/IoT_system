@@ -32,7 +32,7 @@ func (h *Handler) createDeviceHistory(c *gin.Context) {
 }
 
 type getAlllistResponse struct {
-	Data []pkg.DevicesHistory `json:"Data"`
+	Data []pkg.DevicesHistory `json:"data"`
 }
 
 func (h *Handler) getDeviceHistory(c *gin.Context) {

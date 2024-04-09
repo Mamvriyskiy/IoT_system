@@ -13,7 +13,9 @@ func NewHistoryDeviceService(repo repository.IHistoryDeviceRepo) *HistoryDeviceS
 	return &HistoryDeviceService{repo: repo}
 }
 
-func (s *HistoryDeviceService) CreateDeviceHistory(deviceID int, history pkg.DevicesHistory) (int, error) {
+func (s *HistoryDeviceService) CreateDeviceHistory(deviceID int,
+	history pkg.DevicesHistory,
+) (int, error) {
 	return s.repo.CreateDeviceHistory(deviceID, history)
 }
 

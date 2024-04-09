@@ -68,7 +68,7 @@ func (h *Handler) updateStatus(c *gin.Context) {
 }
 
 type getAlllistUserResponse struct {
-	Data []pkg.ClientHome `json:"Data"`
+	Data []pkg.ClientHome `json:"data"`
 }
 
 func (h *Handler) getListUserHome(c *gin.Context) {
