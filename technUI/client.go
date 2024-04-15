@@ -17,20 +17,22 @@ type UserResponse struct {
 }
 
 var (
-	user UserResponse
+	//user UserResponse
+	TOKEN string
 )
 
 func menu() {
 	fmt.Println(`
 		1)Создать дом
 		2)Удалить дом
-		3)Добавить устройство
-		4)Создать устройство
-		5)Добавить участника
-		6)Удалить участника
-		7)Поменять уровень доступа участника
-		8)Просмотреть статистика
-		9)Запустить устройство
+		3)Обновить имя дома
+		4)Добавить устройство
+		5)Создать устройство
+		6)Добавить участника
+		7)Удалить участника
+		8)Поменять уровень доступа участника
+		9)Просмотреть статистика
+		10)Запустить устройство
 		0)Завершить работу
 	`)
 }
@@ -62,12 +64,10 @@ func registerUser() error {
 		"email":    email,
 	}
 
-	result, err := requestServer("POST", "/auth/sign-up", data)
+	_, err = requestServer("POST", "/auth/sign-up", data)
 	if err != nil {
 		return err
 	}
-
-	user.ID = result.ID
 
 	return nil
 }
@@ -97,7 +97,7 @@ func auth() error {
 		return err
 	}
 
-	user.Token = result.Token
+	TOKEN = result
 
 	return nil
 }
@@ -113,51 +113,68 @@ func createHome() error {
 
 	data := map[string]string{
 		"name": nameHome,
-		"ownerId": string(user.ID),
 	}
 
-	result, err := requestServer("POST", "/home/create", data)
+	_, err = requestServer("POST", "/api/home", data)
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
 
-	user.HomeID = result.HomeID
 	return nil
 }
 
 func deleteHome() error {
 	data := map[string]string{
-		"homeId": string(user.ID),
+		// "homeId": string(user.ID),
 	}
 
-	result, err := requestServer("POST", "/home/create", data)
+	_, err := requestServer("DELETE", "/api/home", data)
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
 
-	user.HomeID = 0
 	return nil
 }
 
-func requestServer(typeReq, path string, data map[string]string) (UserResponse, error) {
-	jsonData, err := json.Marshal(data)
-	if err != nil {
-		return UserResponse{}, err
-	}
+func updateHome() error {
+	var newHomeName string
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Введите имя дома: ")
+	fmt.Fscan(reader, &newHomeName)
 
-	req, err := http.NewRequest(typeReq, "http://localhost:8000" + path, bytes.NewBuffer(jsonData))
+	data := map[string]string{
+		"name": newHomeName,
+	}
+	_, err := requestServer("PUT", "/api/home", data)
 	if err != nil {
 		fmt.Println(err)
-		return UserResponse{}, err
+		return err
+	}
+
+	return nil
+}
+
+func requestServer(typeReq, path string, data map[string]string) (string, error) {
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return "", err
+	}
+
+	
+	req, err := http.NewRequest(typeReq, "http://localhost:8000" + path, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer "+ TOKEN)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
 	}
 
 	client := http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println(err)
-		return UserResponse{}, err
+		return "", err
 	}
 	defer resp.Body.Close()
 
@@ -165,7 +182,7 @@ func requestServer(typeReq, path string, data map[string]string) (UserResponse, 
 	if resp.StatusCode == http.StatusOK {
 		responseBody, err = io.ReadAll(resp.Body)
 		if err != nil {
-			return UserResponse{}, err
+			return "", err
 		}
 		fmt.Println("Тело ответа:", string(responseBody))
 	} else {
@@ -175,11 +192,11 @@ func requestServer(typeReq, path string, data map[string]string) (UserResponse, 
 	var userResponse UserResponse
 	if len(responseBody) > 0 {
 		if err := json.Unmarshal(responseBody, &userResponse); err != nil {
-			return UserResponse{}, err
+			return "", err
 		}
 	}
 
-	return userResponse, nil
+	return userResponse.Token, nil
 }
 
 func clientGO() {
@@ -206,6 +223,10 @@ func clientGO() {
 				fmt.Println("Error:", err)
 			}
 		case 3:
+			err := updateHome()
+			if err != nil {
+				fmt.Println("Error:", err)
+			}
 		case 4:
 		case 5:
 		case 6:

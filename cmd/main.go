@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -15,10 +16,12 @@ import (
 func main() {
 	if err := initConfig(); err != nil {
 		// *TODO: log
+		fmt.Println("No config", err)
 		return
 	}
 
 	if err := godotenv.Load(); err != nil {
+		fmt.Println("No env")
 		// *TODO: log
 		return
 	}
@@ -32,6 +35,7 @@ func main() {
 		SSLMode:  viper.GetString("db.sslmode"),
 	})
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	repos := repository.NewRepository(db)

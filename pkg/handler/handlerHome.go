@@ -1,27 +1,33 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
+	//"strconv"
 )
 
 func (h *Handler) createHome(c *gin.Context) {
-	// id, ok := c.Get(userCtx)
-	// if !ok {
-	// 	// *TODO: log
-	// 	return
-	// }
-	var input pkg.Home
-	if err := c.BindJSON(&input); err != nil {
+	id, ok := c.Get("userID")
+	if !ok {
+		fmt.Println(ok)
 		// *TODO: log
 		return
 	}
 
-	id := 1
-	idHome, err := h.services.IHome.CreateHome(id, input)
+	var input pkg.Home
+	if err := c.BindJSON(&input); err != nil {
+		fmt.Println(err)
+		// *TODO: log
+		return
+	}
+
+	ownerID := id.(int)
+	idHome, err := h.services.IHome.CreateHome(ownerID, input)
 	if err != nil {
+		fmt.Println(err, "===")
 		// *TODO log
 		return
 	}
@@ -32,13 +38,13 @@ func (h *Handler) createHome(c *gin.Context) {
 }
 
 func (h *Handler) deleteHome(c *gin.Context) {
-	// id, ok := c.Get(userCtx)
-	// if !ok {
-	// 	// *TODO: log
-	// 	return
-	// }
-	homeID := 1
-	err := h.services.IHome.DeleteHome(homeID)
+	id, ok := c.Get("userID")
+	if !ok {
+		// *TODO: log
+		return
+	}
+
+	err := h.services.IHome.DeleteHome(id.(int))
 	if err != nil {
 		// *TODO log
 		return
@@ -46,11 +52,12 @@ func (h *Handler) deleteHome(c *gin.Context) {
 }
 
 func (h *Handler) updateHome(c *gin.Context) {
-	// id, ok := c.Get(userCtx)
-	// if !ok {
-	// 	// *TODO: log
-	// 	return
-	// }
+	id, ok := c.Get("homeID")
+	fmt.Println("UpdateOK:", ok)
+	if !ok {
+		// *TODO: log
+		return
+	}
 
 	var input pkg.Home
 	if err := c.BindJSON(&input); err != nil {
@@ -58,7 +65,8 @@ func (h *Handler) updateHome(c *gin.Context) {
 		return
 	}
 
-	input.ID = 1
+	fmt.Println("HomeID:", id)
+	input.ID = id.(int)
 
 	err := h.services.IHome.UpdateHome(input)
 	if err != nil {

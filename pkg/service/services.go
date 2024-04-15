@@ -9,6 +9,7 @@ type IUser interface {
 	CreateUser(user pkg.User) (int, error)
 	CheckUser(user pkg.User) (int, error)
 	GenerateToken(login, password string) (string, error)
+	ParseToken(token string) (int, error)
 }
 
 type IHome interface {

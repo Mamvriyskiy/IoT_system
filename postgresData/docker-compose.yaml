@@ -1,4 +1,4 @@
-version: '3.5'
+version: "3.5"
 
 services:
   db_auth:
@@ -11,5 +11,5 @@ services:
     image: postgres:15.4-alpine
     volumes:
       - type: bind
-        source: /Users/ivanmamvriyskiy/Desktop/PPO/postgresData
+        source: /Users/ivanmamvriyskiy/Desktop/PPOdev/postgresData
         target: /mnt
