@@ -14,11 +14,11 @@ func NewHistoryDeviceService(repo repository.IHistoryDeviceRepo) *HistoryDeviceS
 }
 
 func (s *HistoryDeviceService) CreateDeviceHistory(deviceID int,
-	history pkg.DevicesHistory,
+	history pkg.AddHistory,
 ) (int, error) {
 	return s.repo.CreateDeviceHistory(deviceID, history)
 }
 
-func (s *HistoryDeviceService) GetDeviceHistory(idDevice int) ([]pkg.DevicesHistory, error) {
-	return s.repo.GetDeviceHistory(idDevice)
+func (s *HistoryDeviceService) GetDeviceHistory(userID int, name string) ([]pkg.DevicesHistory, error) {
+	return s.repo.GetDeviceHistory(userID, name)
 }

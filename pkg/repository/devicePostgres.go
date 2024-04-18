@@ -15,7 +15,16 @@ func NewDevicePostgres(db *sqlx.DB) *DevicePostgres {
 	return &DevicePostgres{db: db}
 }
 
-func (r *DevicePostgres) CreateDevice(homeID int, device *pkg.Devices) (int, error) {
+func (r *DevicePostgres) CreateDevice(userID int, device *pkg.Devices) (int, error) {
+	var homeID int
+	queryHomeID := `select h.homeid from home h 
+	where h.homeid in (select a.homeid from accesshome a 
+		where a.accessid in (select a.accessid from accessclient a 
+			JOIN access ac ON a.accessid = ac.accessid where clientid = $1 AND accessLevel = 4));`
+	
+	err := r.db.Get(&homeID, queryHomeID, userID)
+	fmt.Println(err, homeID)
+
 	var id int
 	query := fmt.Sprintf(`INSERT INTO %s (name, TypeDevice, Status, 
 		Brand, PowerConsumption, MinParametr, MaxParametr) 
@@ -23,7 +32,7 @@ func (r *DevicePostgres) CreateDevice(homeID int, device *pkg.Devices) (int, err
 	row := r.db.QueryRow(query, device.Name, device.TypeDevice,
 		device.Status, device.Brand, device.PowerConsumption,
 		device.MinParameter, device.MaxParameter)
-	err := row.Scan(&id)
+	err = row.Scan(&id)
 	if err != nil {
 		return 0, err
 	}
@@ -37,20 +46,43 @@ func (r *DevicePostgres) CreateDevice(homeID int, device *pkg.Devices) (int, err
 	return id, nil
 }
 
-func (r *DevicePostgres) DeleteDevice(idDevice int) error {
+func (r *DevicePostgres) DeleteDevice(userID int, name string) error {
+	fmt.Println("====")
+	var homeID int
+	queryHomeID := `select h.homeid from home h 
+	where h.homeid in (select a.homeid from accesshome a 
+		where a.accessid in (select a.accessid from accessclient a 
+			JOIN access ac ON a.accessid = ac.accessid where clientid = $1 AND accessLevel = 4));`
+	
+	err := r.db.Get(&homeID, queryHomeID, userID)
+	fmt.Println(err, homeID)
+	if err != nil {
+		return err
+	}
+	fmt.Println("====")
+	var deviceID int
+	queryDeviceID := `select d.deviceid from device d 
+	join devicehome d2 on d.deviceid = d2.deviceid 
+		where d2.homeid = $1 and d.name = $2;`
+	err = r.db.Get(&deviceID, queryDeviceID, homeID, name)
+	fmt.Println(err, homeID)
+	if err != nil {
+		return err
+	}
+
 	query := `DELETE FROM historydev
 			WHERE historydevid IN 
 				(SELECT h2.historydevid FROM historydevice h2 
 					WHERE h2.deviceid = $1);`
 
-	_, err := r.db.Exec(query, idDevice)
+	_, err = r.db.Exec(query, deviceID)
 	if err != nil {
 		return err
 	}
 
 	query = `DELETE FROM device 
 							where deviceid = $1;`
-	_, err = r.db.Exec(query, idDevice)
+	_, err = r.db.Exec(query, deviceID)
 	if err != nil {
 		return err
 	}

@@ -88,7 +88,6 @@ func (s *UserService) ParseToken(accessToken string) (int, error) {
 
 	claims, ok := token.Claims.(*tokenClaims)
 	if !ok {
-		fmt.Println("2")
 		return 0, nil
 	}
 

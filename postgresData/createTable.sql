@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS access (
 CREATE TABLE IF NOT EXISTS accessClient (clientID int, accessID int);
 
 CREATE TABLE IF NOT EXISTS accessHome (accessID int, homeID int);
-
 CREATE TABLE IF NOT EXISTS home (homeID SERIAL, ownerID int, name varchar(20));
 
 CREATE TABLE IF NOT EXISTS device (

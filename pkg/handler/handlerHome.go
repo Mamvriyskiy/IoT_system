@@ -25,15 +25,29 @@ func (h *Handler) createHome(c *gin.Context) {
 	}
 
 	ownerID := id.(int)
-	idHome, err := h.services.IHome.CreateHome(ownerID, input)
+	homeID, err := h.services.IHome.CreateHome(ownerID, input)
 	if err != nil {
-		fmt.Println(err, "===")
 		// *TODO log
 		return
 	}
 
+	type AccessHome struct {
+		AccessStatus string `json:"status"`
+		ID           int    `db:"accessID" json:"-"`
+		AccessLevel  int    `json:"level"`
+	}
+
+	_, err = h.services.IAccessHome.AddOwner(ownerID, homeID)
+	if err != nil {
+		// *TODO log
+		return
+	}
+
+	c.Set("homeID", homeID)
+	c.Next()
+
 	c.JSON(http.StatusOK, map[string]interface{}{
-		"homeId": idHome,
+		"homeId": homeID,
 	})
 }
 
@@ -51,24 +65,49 @@ func (h *Handler) deleteHome(c *gin.Context) {
 	}
 }
 
+type getAllListHomeResponse struct {
+	Data []pkg.Home `json:"data"`
+}
+
+func (h * Handler) listHome(c *gin.Context) {
+	id, ok := c.Get("userID")
+	if !ok {
+		// *TODO: log
+		return
+	}
+
+	homeListUser, err := h.services.IHome.ListUserHome(id.(int))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	
+	c.JSON(http.StatusOK, getAllListHomeResponse {
+		Data: homeListUser,
+	})
+}
+
+
 func (h *Handler) updateHome(c *gin.Context) {
-	id, ok := c.Get("homeID")
-	fmt.Println("UpdateOK:", ok)
+	id, ok := c.Get("userID")
 	if !ok {
 		// *TODO: log
 		return
 	}
 
 	var input pkg.Home
-	if err := c.BindJSON(&input); err != nil {
+	err := c.BindJSON(&input)
+	if err != nil {
 		// *TODO: log
 		return
 	}
+	input.OwnerID = id.(int)
+	if err != nil {
+		// *TODO log
+		return
+	}
 
-	fmt.Println("HomeID:", id)
-	input.ID = id.(int)
-
-	err := h.services.IHome.UpdateHome(input)
+	err = h.services.IHome.UpdateHome(input)
 	if err != nil {
 		// *TODO log
 		return

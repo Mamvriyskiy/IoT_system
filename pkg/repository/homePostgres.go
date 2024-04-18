@@ -15,6 +15,21 @@ func NewHomePostgres(db *sqlx.DB) *HomePostgres {
 	return &HomePostgres{db: db}
 }
 
+func (r *HomePostgres) ListUserHome(userID int) ([]pkg.Home, error) {
+	getHomeID := `select h.homeid, h.name from home h 
+	where h.homeid in (select a.homeid from accesshome a 
+		where a.accessid in (select a.accessid from accessclient a where clientid = $1));`
+
+	var homeList []pkg.Home
+	err := r.db.Select(&homeList, getHomeID, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return homeList, nil
+}
+
+
 func (r *HomePostgres) CreateHome(ownerID int, home pkg.Home) (int, error) {
 	var id int
 	query := fmt.Sprintf("INSERT INTO %s (ownerid, name) values ($1, $2) RETURNING homeID", "home")
@@ -26,11 +41,21 @@ func (r *HomePostgres) CreateHome(ownerID int, home pkg.Home) (int, error) {
 	return id, nil
 }
 
-func (r *HomePostgres) DeleteHome(homeID int) error {
+func (r *HomePostgres) DeleteHome(userID int) error {
+	var homeID int
+	queryHomeID := `select h.homeid from home h 
+	where h.homeid in (select a.homeid from accesshome a 
+		where a.accessid in (select a.accessid from accessclient a 
+			JOIN access ac ON a.accessid = ac.accessid where clientid = $1 AND accessLevel = 4));`
+	
+	err := r.db.Get(&homeID, queryHomeID, userID)
+	fmt.Println("1", err, homeID)
+	
 	query1 := `DELETE FROM access 
 		WHERE accessid IN (SELECT accessid 
 			FROM accesshome WHERE homeid = $1);`
-	_, err := r.db.Exec(query1, homeID)
+	_, err = r.db.Exec(query1, homeID)
+	fmt.Println("2", err)
 	if err != nil {
 		return err
 	}
@@ -40,6 +65,7 @@ func (r *HomePostgres) DeleteHome(homeID int) error {
 			FROM historydevice WHERE deviceid 
 				IN (SELECT deviceid FROM devicehome WHERE homeid = $1));`
 	_, err = r.db.Exec(query2, homeID)
+	fmt.Println("3", err)
 	if err != nil {
 		return err
 	}
@@ -63,25 +89,30 @@ func (r *HomePostgres) DeleteHome(homeID int) error {
 }
 
 func (r *HomePostgres) UpdateHome(home pkg.Home) error {
+	var homeID int
+	queryHomeID := `select h.homeid from home h 
+	where h.homeid in (select a.homeid from accesshome a 
+		where a.accessid in (select a.accessid from accessclient a 
+			JOIN access ac ON a.accessid = ac.accessid where clientid = $1 AND accessLevel = 4));`
+	
+	err := r.db.Get(&homeID, queryHomeID, home.OwnerID)
+	fmt.Println(err, home.Name, homeID)
+
 	query := `UPDATE home
 		SET name = $1
 		WHERE homeid = $2;`
-	result, err := r.db.Exec(query, home.Name, home.ID)
+	result, err := r.db.Exec(query, home.Name, homeID)
 	if err != nil {
 		// Обработка ошибки, если запрос не удалось выполнить
 
 		return err
 	}
 
-	rowsAffected, err := result.RowsAffected()
+	_, err = result.RowsAffected()
 	if err != nil {
 		// Обработка ошибки, если не удалось получить количество затронутых строк
 
 		return err
-	}
-
-	if rowsAffected == 0 {
-		return nil
 	}
 
 	return err

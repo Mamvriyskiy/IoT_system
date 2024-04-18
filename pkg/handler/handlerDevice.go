@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
@@ -8,11 +9,11 @@ import (
 )
 
 func (h *Handler) createDevice(c *gin.Context) {
-	// id, ok := c.Get(userCtx)
-	// if !ok {
-	// 	// *TODO: log
-	// 	return
-	// }
+	id, ok := c.Get("userID")
+	if !ok {
+		// *TODO: log
+		return
+	}
 
 	var input pkg.Devices
 	if err := c.BindJSON(&input); err != nil {
@@ -20,8 +21,7 @@ func (h *Handler) createDevice(c *gin.Context) {
 		return
 	}
 
-	homeID := 1
-	idDevice, err := h.services.IDevice.CreateDevice(homeID, &input)
+	idDevice, err := h.services.IDevice.CreateDevice(id.(int), &input)
 	if err != nil {
 		// *TODO log
 		return
@@ -33,14 +33,22 @@ func (h *Handler) createDevice(c *gin.Context) {
 }
 
 func (h *Handler) deleteDevice(c *gin.Context) {
-	// id, ok := c.Get(userCtx)
-	// if !ok {
-	// 	// *TODO: log
-	// 	return
-	// }
+	id, ok := c.Get("userID")
+	fmt.Println(id, ok)
+	if !ok {
+		// *TODO: log
+		return
+	}
 
-	idDevice := 1
-	err := h.services.IDevice.DeleteDevice(idDevice)
+	fmt.Println("1")
+	var input pkg.Devices
+	if err := c.BindJSON(&input); err != nil {
+		// *TODO: log
+		return
+	}
+
+	fmt.Println("2")
+	err := h.services.IDevice.DeleteDevice(id.(int), input.Name)
 	if err != nil {
 		// *TODO log
 		return

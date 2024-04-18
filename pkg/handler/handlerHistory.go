@@ -2,25 +2,32 @@ package handler
 
 import (
 	"net/http"
-
+	"math/rand"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) createDeviceHistory(c *gin.Context) {
-	// id, ok := c.Get(userCtx)
-	// if !ok {
-	// 	// *TODO: log
-	// 	return
-	// }
-	var input pkg.DevicesHistory
+	id, ok := c.Get("userID")
+	if !ok {
+		// *TODO: log
+		return
+	}
+
+	var input pkg.AddHistory
 	if err := c.BindJSON(&input); err != nil {
 		// *TODO: log
 		return
 	}
 
-	deviceID := 1
-	idHistory, err := h.services.IHistoryDevice.CreateDeviceHistory(deviceID, input)
+	history := pkg.AddHistory{
+		Name : input.Name,
+		TimeWork : rand.Intn(101),
+		AverageIndicator : rand.Float64() * 100,
+		EnergyConsumed :  rand.Intn(101),
+	}
+
+	idHistory, err := h.services.IHistoryDevice.CreateDeviceHistory(id.(int), history)
 	if err != nil {
 		// *TODO log
 		return
@@ -36,14 +43,19 @@ type getAllListResponse struct {
 }
 
 func (h *Handler) getDeviceHistory(c *gin.Context) {
-	// id, ok := c.Get(userCtx)
-	// if !ok {
-	// 	// *TODO: log
-	// 	return
-	// }
+	id, ok := c.Get("userID")
+	if !ok {
+		// *TODO: log
+		return
+	}
 
-	idDevice := 1
-	input, err := h.services.IHistoryDevice.GetDeviceHistory(idDevice)
+	var info pkg.AddHistory
+	if err := c.BindJSON(&info); err != nil {
+		// *TODO: log
+		return
+	}
+
+	input, err := h.services.IHistoryDevice.GetDeviceHistory(id.(int), info.Name)
 	if err != nil {
 		// *TODO log
 		return

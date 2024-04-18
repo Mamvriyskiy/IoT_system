@@ -17,25 +17,27 @@ type IHome interface {
 	DeleteHome(homeID int) error
 	UpdateHome(home pkg.Home) error
 	GetHomeByID(homeID int) (pkg.Home, error)
+	ListUserHome(userID int) ([]pkg.Home, error)
 }
 
 type IAccessHome interface {
-	AddUser(homeID, userID int, access pkg.AccessHome) (int, error)
-	DeleteUser(idUser int) error
+	AddUser(userID, accessLevel int, email string) (int, error)
+	DeleteUser(idUser int, email string) error
 	UpdateLevel(idUser int, access pkg.AccessHome) error
 	UpdateStatus(idUser int, access pkg.AccessHome) error
 	GetListUserHome(homeID int) ([]pkg.ClientHome, error)
+	AddOwner(userID, homeID int) (int, error) 
 }
 
 type IDevice interface {
 	CreateDevice(homeID int, device *pkg.Devices) (int, error)
-	DeleteDevice(idDevice int) error
+	DeleteDevice(idDevice int, name string) error
 	GetDeviceByID(deviceID int) (pkg.Devices, error)
 }
 
 type IHistoryDevice interface {
-	CreateDeviceHistory(deviceID int, history pkg.DevicesHistory) (int, error)
-	GetDeviceHistory(idDevice int) ([]pkg.DevicesHistory, error)
+	CreateDeviceHistory(deviceID int, history pkg.AddHistory) (int, error)
+	GetDeviceHistory(userID int, name string) ([]pkg.DevicesHistory, error)
 }
 
 type Services struct {

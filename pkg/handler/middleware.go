@@ -15,15 +15,14 @@ func (h *Handler) userIdentity(c *gin.Context) {
 	}
 
 	headerParts := strings.Split(header, " ")
+	fmt.Println(headerParts)
 	if len(headerParts) != 2 {
 		fmt.Println("invalid auth header")
 		return
 	}
 
 	userID, err := h.services.IUser.ParseToken(headerParts[1])
-	fmt.Println("===", userID)
 	if err != nil {
-		fmt.Println(err)
 		return
 	}
 
