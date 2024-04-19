@@ -44,26 +44,18 @@ func TestCheckUser(t *testing.T) {
 		Username: "username",
 		Email:    "qwerty@mail.ru",
 		Password: "qwerty",
+		ID:       123,
 	}
 
-	mockRepo.EXPECT().
-		GetPasswordByID(123).
-		Return(
-			"6866646a6d6178636b646b323065e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5",
-			nil)
-
-	mockRepo.EXPECT().GetUserByEmail("qwerty@mail.ru").Return(123, nil)
+	mockRepo.EXPECT().GetUser(user.Username, user.Password).Return(user, nil)
 
 	userService := service.NewUserService(mockRepo)
 
-	cmp, userID, err := userService.CheckUser(user)
+	userID, err := userService.CheckUser(user)
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
 	if userID != 123 {
 		t.Errorf("Expected userID 123, got %d", userID)
-	}
-	if !cmp {
-		t.Error("Expected search true, got", cmp)
 	}
 }
