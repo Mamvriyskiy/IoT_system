@@ -17,8 +17,8 @@ func (s *DeviceService) CreateDevice(homeID int, device *pkg.Devices) (int, erro
 	return s.repo.CreateDevice(homeID, device)
 }
 
-func (s *DeviceService) DeleteDevice(idDevice int) error {
-	return s.repo.DeleteDevice(idDevice)
+func (s *DeviceService) DeleteDevice(idDevice int, name string) error {
+	return s.repo.DeleteDevice(idDevice, name)
 }
 
 func (s *DeviceService) GetDeviceByID(deviceID int) (pkg.Devices, error) {

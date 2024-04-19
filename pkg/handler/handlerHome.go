@@ -8,59 +8,98 @@ import (
 )
 
 func (h *Handler) createHome(c *gin.Context) {
-	// id, ok := c.Get(userCtx)
-	// if !ok {
-	// 	// *TODO: log
-	// 	return
-	// }
+	id, ok := c.Get("userID")
+	if !ok {
+		// *TODO: log
+		return
+	}
+
 	var input pkg.Home
 	if err := c.BindJSON(&input); err != nil {
 		// *TODO: log
 		return
 	}
 
-	id := 1
-	idHome, err := h.services.IHome.CreateHome(id, input)
+	homeID, err := h.services.IHome.CreateHome(id.(int), input)
 	if err != nil {
 		// *TODO log
 		return
 	}
 
+	_, err = h.services.IAccessHome.AddOwner(id.(int), homeID)
+	if err != nil {
+		// *TODO log
+		return
+	}
+
+	c.Set("homeID", homeID)
+	c.Next()
+
 	c.JSON(http.StatusOK, map[string]interface{}{
-		"homeId": idHome,
+		"homeId": homeID,
 	})
 }
 
 func (h *Handler) deleteHome(c *gin.Context) {
-	// id, ok := c.Get(userCtx)
-	// if !ok {
-	// 	// *TODO: log
-	// 	return
-	// }
-	homeID := 1
-	err := h.services.IHome.DeleteHome(homeID)
+	id, ok := c.Get("userID")
+	if !ok {
+		// *TODO: log
+		return
+	}
+
+	err := h.services.IHome.DeleteHome(id.(int))
 	if err != nil {
 		// *TODO log
 		return
 	}
 }
 
-func (h *Handler) updateHome(c *gin.Context) {
-	// id, ok := c.Get(userCtx)
-	// if !ok {
-	// 	// *TODO: log
-	// 	return
-	// }
+type getAllListHomeResponse struct {
+	Data []pkg.Home `json:"data"`
+}
 
-	var input pkg.Home
-	if err := c.BindJSON(&input); err != nil {
+func (h *Handler) listHome(c *gin.Context) {
+	id, ok := c.Get("userID")
+	if !ok {
 		// *TODO: log
 		return
 	}
 
-	input.ID = 1
+	homeListUser, err := h.services.IHome.ListUserHome(id.(int))
+	if err != nil {
+		return
+	}
 
-	err := h.services.IHome.UpdateHome(input)
+	c.JSON(http.StatusOK, getAllListHomeResponse{
+		Data: homeListUser,
+	})
+}
+
+func (h *Handler) updateHome(c *gin.Context) {
+	id, ok := c.Get("userID")
+	if !ok {
+		// *TODO: log
+		return
+	}
+
+	var input pkg.Home
+	err := c.BindJSON(&input)
+	if err != nil {
+		// *TODO: log
+		return
+	}
+
+	if err != nil {
+		// *TODO log
+		return
+	}
+
+	input.OwnerID, ok = id.(int)
+	if !ok {
+		return
+	}
+
+	err = h.services.IHome.UpdateHome(input)
 	if err != nil {
 		// *TODO log
 		return

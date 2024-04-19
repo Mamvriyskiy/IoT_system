@@ -8,15 +8,19 @@ import (
 )
 
 func (h *Handler) addUser(c *gin.Context) {
-	var input pkg.AccessHome
+	userID, ok := c.Get("userID")
+	if !ok {
+		// *TODO: log
+		return
+	}
+
+	var input pkg.AddUserHome
 	if err := c.BindJSON(&input); err != nil {
 		// *TODO: log
 		return
 	}
 
-	userID := 1
-	homeID := 1
-	idAccess, err := h.services.IAccessHome.AddUser(homeID, userID, input)
+	idAccess, err := h.services.IAccessHome.AddUser(userID.(int), input.AccessLevel, input.Email)
 	if err != nil {
 		// *TODO log
 		return
@@ -28,9 +32,19 @@ func (h *Handler) addUser(c *gin.Context) {
 }
 
 func (h *Handler) deleteUser(c *gin.Context) {
-	idUser := 1
+	userID, ok := c.Get("userID")
+	if !ok {
+		// *TODO: log
+		return
+	}
 
-	err := h.services.IAccessHome.DeleteUser(idUser)
+	var input pkg.AddUserHome
+	if err := c.BindJSON(&input); err != nil {
+		// *TODO: log
+		return
+	}
+
+	err := h.services.IAccessHome.DeleteUser(userID.(int), input.Email)
 	if err != nil {
 		// *TODO log
 		return
@@ -67,7 +81,7 @@ func (h *Handler) updateStatus(c *gin.Context) {
 	}
 }
 
-type getAlllistUserResponse struct {
+type getAllListUserResponse struct {
 	Data []pkg.ClientHome `json:"data"`
 }
 
@@ -79,7 +93,7 @@ func (h *Handler) getListUserHome(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, getAlllistUserResponse{
+	c.JSON(http.StatusOK, getAllListUserResponse{
 		Data: listUser,
 	})
 }

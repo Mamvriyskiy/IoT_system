@@ -70,3 +70,24 @@ func (s *UserService) generatePasswordHash(password string) string {
 
 	return hex.EncodeToString(hash.Sum([]byte(salt)))
 }
+
+func (s *UserService) ParseToken(accessToken string) (int, error) {
+	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{},
+		func(token *jwt.Token) (interface{}, error) {
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return 0, nil
+			}
+
+			return []byte(signingKey), nil
+		})
+	if err != nil {
+		return 0, err
+	}
+
+	claims, ok := token.Claims.(*tokenClaims)
+	if !ok {
+		return 0, nil
+	}
+
+	return claims.UserID, nil
+}

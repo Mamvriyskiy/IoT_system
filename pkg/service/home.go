@@ -28,3 +28,7 @@ func (s *HomeService) UpdateHome(home pkg.Home) error {
 func (s *HomeService) GetHomeByID(homeID int) (pkg.Home, error) {
 	return s.repo.GetHomeByID(homeID)
 }
+
+func (s *HomeService) ListUserHome(userID int) ([]pkg.Home, error) {
+	return s.repo.ListUserHome(userID)
+}

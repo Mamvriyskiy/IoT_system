@@ -15,7 +15,8 @@ func TestCreateDeviceHistory(t *testing.T) {
 
 	mockRepo := mocks_service.NewMockIHistoryDeviceRepo(ctrl)
 
-	history := pkg.DevicesHistory{
+	history := pkg.AddHistory{
+		Name:             "dev1",
 		TimeWork:         200,
 		AverageIndicator: 66,
 		EnergyConsumed:   100,
@@ -41,11 +42,11 @@ func TestGetDeviceHistory(t *testing.T) {
 
 	mockRepo := mocks_service.NewMockIHistoryDeviceRepo(ctrl)
 
-	mockRepo.EXPECT().GetDeviceHistory(10).Return(nil, nil)
+	mockRepo.EXPECT().GetDeviceHistory(10, "dev1").Return(nil, nil)
 
 	historyService := service.NewHistoryDeviceService(mockRepo)
 
-	list, err := historyService.GetDeviceHistory(10)
+	list, err := historyService.GetDeviceHistory(10, "dev1")
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}

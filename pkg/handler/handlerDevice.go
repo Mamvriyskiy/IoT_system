@@ -8,11 +8,11 @@ import (
 )
 
 func (h *Handler) createDevice(c *gin.Context) {
-	// id, ok := c.Get(userCtx)
-	// if !ok {
-	// 	// *TODO: log
-	// 	return
-	// }
+	id, ok := c.Get("userID")
+	if !ok {
+		// *TODO: log
+		return
+	}
 
 	var input pkg.Devices
 	if err := c.BindJSON(&input); err != nil {
@@ -20,8 +20,7 @@ func (h *Handler) createDevice(c *gin.Context) {
 		return
 	}
 
-	homeID := 1
-	idDevice, err := h.services.IDevice.CreateDevice(homeID, &input)
+	idDevice, err := h.services.IDevice.CreateDevice(id.(int), &input)
 	if err != nil {
 		// *TODO log
 		return
@@ -33,14 +32,19 @@ func (h *Handler) createDevice(c *gin.Context) {
 }
 
 func (h *Handler) deleteDevice(c *gin.Context) {
-	// id, ok := c.Get(userCtx)
-	// if !ok {
-	// 	// *TODO: log
-	// 	return
-	// }
+	id, ok := c.Get("userID")
+	if !ok {
+		// *TODO: log
+		return
+	}
 
-	idDevice := 1
-	err := h.services.IDevice.DeleteDevice(idDevice)
+	var input pkg.Devices
+	if err := c.BindJSON(&input); err != nil {
+		// *TODO: log
+		return
+	}
+
+	err := h.services.IDevice.DeleteDevice(id.(int), input.Name)
 	if err != nil {
 		// *TODO log
 		return
