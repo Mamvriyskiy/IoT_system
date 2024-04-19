@@ -2,7 +2,6 @@ package handler
 
 import (
 	"crypto/rand"
-	"fmt"
 	"math/big"
 	"net/http"
 
@@ -70,12 +69,10 @@ func (h *Handler) getDeviceHistory(c *gin.Context) {
 
 	var info pkg.AddHistory
 	if err := c.BindJSON(&info); err != nil {
-		fmt.Println(err)
 		// *TODO: log
 		return
 	}
 
-	fmt.Println("+")
 	input, err := h.services.IHistoryDevice.GetDeviceHistory(id.(int), info.Name)
 	if err != nil {
 		// *TODO log

@@ -78,7 +78,6 @@ func (r *DeviceHistoryPostgres) GetDeviceHistory(userID int,
 			JOIN access ac ON a.accessid = ac.access
 			id where clientid = $1));`
 	err := r.db.Get(&homeID, queryHomeID, userID)
-	fmt.Println(err)
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +87,6 @@ func (r *DeviceHistoryPostgres) GetDeviceHistory(userID int,
 		join devicehome dh on d.deviceid = dh.deviceid 
 			where dh.homeid = $1 and d.name = $2;`
 	err = r.db.Get(&deviceID, querDeviceID, homeID, name)
-	fmt.Println(err)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +96,6 @@ func (r *DeviceHistoryPostgres) GetDeviceHistory(userID int,
 		from historydev as hi join historydevice as hd on hi.historydevid = hd.historydevid 
 			where hd.deviceid = $1`
 	err = r.db.Select(&lists, query, deviceID)
-	fmt.Println(err)
 	if err != nil {
 		return nil, err
 	}
