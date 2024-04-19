@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"net/http"
+
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
 )
@@ -19,22 +21,30 @@ func (h *Handler) signUp(c *gin.Context) {
 		return
 	}
 
-	_ = id
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"id": id,
+	})
+}
+
+type signInInput struct {
+	Password string `json:"password"`
+	Username string `json:"login"`
 }
 
 func (h *Handler) signIn(c *gin.Context) {
-	var input pkg.User
+	var input signInInput
 	if err := c.BindJSON(&input); err != nil {
 		// *TODO: log
 		return
 	}
 
-	cmp, id, err := h.services.IUser.CheckUser(input)
+	token, err := h.services.IUser.GenerateToken(input.Username, input.Password)
 	if err != nil {
 		// *TODO log
 		return
 	}
 
-	_ = id
-	_ = cmp
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"token": token,
+	})
 }

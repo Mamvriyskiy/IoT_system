@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"net/http"
+
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
 )
@@ -11,41 +13,26 @@ func (h *Handler) createDeviceHistory(c *gin.Context) {
 	// 	// *TODO: log
 	// 	return
 	// }
-
 	var input pkg.DevicesHistory
 	if err := c.BindJSON(&input); err != nil {
 		// *TODO: log
 		return
 	}
 
-	idHistory, err := h.services.IHistoryDevice.CreateDeviceHistory(input)
+	deviceID := 1
+	idHistory, err := h.services.IHistoryDevice.CreateDeviceHistory(deviceID, input)
 	if err != nil {
 		// *TODO log
 		return
 	}
 
-	_ = idHistory
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"idHistory": idHistory,
+	})
 }
 
-func (h *Handler) updateDeviceHistory(c *gin.Context) {
-	// id, ok := c.Get(userCtx)
-	// if !ok {
-	// 	// *TODO: log
-	// 	return
-	// }
-
-	var input pkg.DevicesHistory
-	if err := c.BindJSON(&input); err != nil {
-		// *TODO: log
-		return
-	}
-
-	idDevice := 0
-	err := h.services.IHistoryDevice.UpdateDeviceHistory(idDevice, input)
-	if err != nil {
-		// *TODO log
-		return
-	}
+type getAlllistResponse struct {
+	Data []pkg.DevicesHistory `json:"data"`
 }
 
 func (h *Handler) getDeviceHistory(c *gin.Context) {
@@ -55,13 +42,14 @@ func (h *Handler) getDeviceHistory(c *gin.Context) {
 	// 	return
 	// }
 
-	idDevice := 0
+	idDevice := 1
 	input, err := h.services.IHistoryDevice.GetDeviceHistory(idDevice)
 	if err != nil {
 		// *TODO log
 		return
 	}
 
-	_ = input
+	c.JSON(http.StatusOK, getAlllistResponse{
+		Data: input,
+	})
 }
-

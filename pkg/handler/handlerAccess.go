@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"net/http"
+
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
 )
@@ -12,24 +14,23 @@ func (h *Handler) addUser(c *gin.Context) {
 		return
 	}
 
-	idAccess, err := h.services.IAccessHome.AddUser(input)
+	userID := 1
+	homeID := 1
+	idAccess, err := h.services.IAccessHome.AddUser(homeID, userID, input)
 	if err != nil {
 		// *TODO log
 		return
 	}
 
-	_ = idAccess
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"accessID": idAccess,
+	})
 }
 
 func (h *Handler) deleteUser(c *gin.Context) {
-	idUser := 0
-	var input pkg.AccessHome
-	if err := c.BindJSON(&input); err != nil {
-		// *TODO: log
-		return
-	}
+	idUser := 1
 
-	err := h.services.IAccessHome.DeleteUser(idUser, input)
+	err := h.services.IAccessHome.DeleteUser(idUser)
 	if err != nil {
 		// *TODO log
 		return
@@ -37,7 +38,7 @@ func (h *Handler) deleteUser(c *gin.Context) {
 }
 
 func (h *Handler) updateLevel(c *gin.Context) {
-	idUser := 0
+	idUser := 2
 	var input pkg.AccessHome
 	if err := c.BindJSON(&input); err != nil {
 		// *TODO: log
@@ -52,7 +53,7 @@ func (h *Handler) updateLevel(c *gin.Context) {
 }
 
 func (h *Handler) updateStatus(c *gin.Context) {
-	idUser := 0
+	idUser := 2
 	var input pkg.AccessHome
 	if err := c.BindJSON(&input); err != nil {
 		// *TODO: log
@@ -66,19 +67,19 @@ func (h *Handler) updateStatus(c *gin.Context) {
 	}
 }
 
-func (h *Handler) getListUserHome(c *gin.Context) {
-	homeId := 0
-	var input pkg.AccessHome
-	if err := c.BindJSON(&input); err != nil {
-		// *TODO: log
-		return
-	}
+type getAlllistUserResponse struct {
+	Data []pkg.ClientHome `json:"data"`
+}
 
-	listUser, err := h.services.IAccessHome.GetListUserHome(homeId, input)
+func (h *Handler) getListUserHome(c *gin.Context) {
+	homeID := 1
+	listUser, err := h.services.IAccessHome.GetListUserHome(homeID)
 	if err != nil {
 		// *TODO log
 		return
 	}
 
-	_ = listUser
+	c.JSON(http.StatusOK, getAlllistUserResponse{
+		Data: listUser,
+	})
 }

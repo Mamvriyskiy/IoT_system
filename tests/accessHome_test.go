@@ -15,17 +15,11 @@ func TestGetListUserHome(t *testing.T) {
 
 	mockRepo := mocks_service.NewMockIAccessHomeRepo(ctrl)
 
-	accessHome := pkg.AccessHome{
-		HomeID:       5,
-		AccessStatus: true,
-		AccessLevel:  2,
-	}
-
-	mockRepo.EXPECT().GetListUserHome(10, accessHome).Return(nil, nil)
+	mockRepo.EXPECT().GetListUserHome(10).Return(nil, nil)
 
 	accessService := service.NewAccessHomeService(mockRepo)
 
-	list, err := accessService.GetListUserHome(10, accessHome)
+	list, err := accessService.GetListUserHome(10)
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
@@ -41,8 +35,7 @@ func TestUpdateStatus(t *testing.T) {
 	mockRepo := mocks_service.NewMockIAccessHomeRepo(ctrl)
 
 	accessHome := pkg.AccessHome{
-		HomeID:       5,
-		AccessStatus: true,
+		AccessStatus: "active",
 		AccessLevel:  2,
 	}
 
@@ -63,8 +56,7 @@ func TestUpdateLevel(t *testing.T) {
 	mockRepo := mocks_service.NewMockIAccessHomeRepo(ctrl)
 
 	accessHome := pkg.AccessHome{
-		HomeID:       5,
-		AccessStatus: true,
+		AccessStatus: "active",
 		AccessLevel:  2,
 	}
 
@@ -84,17 +76,11 @@ func TestDeleteUser(t *testing.T) {
 
 	mockRepo := mocks_service.NewMockIAccessHomeRepo(ctrl)
 
-	accessHome := pkg.AccessHome{
-		HomeID:       5,
-		AccessStatus: true,
-		AccessLevel:  2,
-	}
-
-	mockRepo.EXPECT().DeleteUser(10, accessHome).Return(nil)
+	mockRepo.EXPECT().DeleteUser(10).Return(nil)
 
 	accessService := service.NewAccessHomeService(mockRepo)
 
-	err := accessService.DeleteUser(10, accessHome)
+	err := accessService.DeleteUser(10)
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
@@ -107,16 +93,17 @@ func TestAddUser(t *testing.T) {
 	mockRepo := mocks_service.NewMockIAccessHomeRepo(ctrl)
 
 	accessHome := pkg.AccessHome{
-		HomeID:       5,
-		AccessStatus: true,
+		AccessStatus: "active",
 		AccessLevel:  2,
 	}
+	userID := 1
+	homeID := 1
 
-	mockRepo.EXPECT().AddUser(accessHome).Return(5, nil)
+	mockRepo.EXPECT().AddUser(userID, homeID, accessHome).Return(5, nil)
 
 	accessService := service.NewAccessHomeService(mockRepo)
 
-	accessID, err := accessService.AddUser(accessHome)
+	accessID, err := accessService.AddUser(userID, homeID, accessHome)
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}

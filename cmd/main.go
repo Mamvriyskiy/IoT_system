@@ -1,21 +1,51 @@
 package main
 
 import (
-	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
-	handler "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/handler"
-	// "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository"
 	"log"
+	"os"
+
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/handler"
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository"
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/service"
+	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
 )
 
 func main() {
-	// *TODO repository.NewPostgresDB
-	// repos := repository.NewRepository()
-	// services := service.NewServices(repos)
-	// handlers := handler.NewHandler(services)
-	handlers := new(handler.Handler)
+	if err := initConfig(); err != nil {
+		// *TODO: log
+		return
+	}
+
+	if err := godotenv.Load(); err != nil {
+		// *TODO: log
+		return
+	}
+
+	db, err := repository.NewPostgresDB(&repository.Config{
+		Host:     viper.GetString("db.host"),
+		Port:     viper.GetString("db.port"),
+		Username: viper.GetString("db.username"),
+		Password: os.Getenv("DB_PASSWORD"),
+		DBName:   viper.GetString("db.dbname"),
+		SSLMode:  viper.GetString("db.sslmode"),
+	})
+	if err != nil {
+		return
+	}
+	repos := repository.NewRepository(db)
+	services := service.NewServices(repos)
+	handlers := handler.NewHandler(services)
 
 	srv := new(pkg.Server)
-	if err := srv.Run("8889", handlers.InitRouters()); err != nil {
-		log.Fatal("error occured while running http server: ", err)
+	if err := srv.Run("8000", handlers.InitRouters()); err != nil {
+		log.Fatal("error occurred while running http server: ", err)
 	}
+}
+
+func initConfig() error {
+	viper.AddConfigPath("configs")
+	viper.SetConfigName("config")
+	return viper.ReadInConfig()
 }

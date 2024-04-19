@@ -5,37 +5,36 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+//go:generate mockgen -source=repository.go -destination=mocks/mocks.go
+
 type IUserRepo interface {
 	CreateUser(user pkg.User) (int, error)
-	GetUserByEmail(email string) (int, error)
-	GetPasswordById(id int) (string, error)
+	GetUser(login, password string) (pkg.User, error)
 }
 
 type IHomeRepo interface {
 	CreateHome(idUser int, home pkg.Home) (int, error)
-	DeleteHome(idUser int, home pkg.Home) error
-	UpdateHome(idUser int, home pkg.Home) error
+	DeleteHome(homeID int) error
+	UpdateHome(home pkg.Home) error
+	GetHomeByID(homeID int) (pkg.Home, error)
 }
 
 type IAccessHomeRepo interface {
-	AddUser(access pkg.AccessHome) (int, error)
-	DeleteUser(idUser int, access pkg.AccessHome) error
+	AddUser(homeID, userID int, access pkg.AccessHome) (int, error)
+	DeleteUser(idUser int) error
 	UpdateLevel(idUser int, access pkg.AccessHome) error
 	UpdateStatus(idUser int, access pkg.AccessHome) error
-	GetListUserHome(idHome int, access pkg.AccessHome) ([]pkg.User, error)
+	GetListUserHome(idHome int) ([]pkg.ClientHome, error)
 }
 
 type IDeviceRepo interface {
-	CreateDevice(device pkg.Devices) (int, error)
-	DeleteDevice(idDevice int, device pkg.Devices) error
-	UpdateDevice(idDevice int, device pkg.Devices) error
-	AddHomeDevice(idHome int, idDevice int, input pkg.Devices) error
-	DeleteHomeDevice(idHome int, idDevice int, input pkg.Devices) error
+	CreateDevice(homeID int, device *pkg.Devices) (int, error)
+	DeleteDevice(idDevice int) error
+	GetDeviceByID(deviceID int) (pkg.Devices, error)
 }
 
 type IHistoryDeviceRepo interface {
-	CreateDeviceHistory(history pkg.DevicesHistory) (int, error)
-	UpdateDeviceHistory(idDevice int, history pkg.DevicesHistory) error
+	CreateDeviceHistory(deviceID int, history pkg.DevicesHistory) (int, error)
 	GetDeviceHistory(idDevice int) ([]pkg.DevicesHistory, error)
 }
 
@@ -49,10 +48,10 @@ type Repository struct {
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
-		IUserRepo: NewUserPostgres(db),
-		IHomeRepo: NewHomePostgres(db),
-		IAccessHomeRepo: NewAccessHomePostgres(db),
-		IDeviceRepo: NewDevicePostgres(db),
+		IUserRepo:          NewUserPostgres(db),
+		IHomeRepo:          NewHomePostgres(db),
+		IAccessHomeRepo:    NewAccessHomePostgres(db),
+		IDeviceRepo:        NewDevicePostgres(db),
 		IHistoryDeviceRepo: NewDeviceHistoryPostgres(db),
 	}
 }
