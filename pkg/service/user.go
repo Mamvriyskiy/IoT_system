@@ -4,7 +4,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"time"
-	"fmt"
 
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository"
@@ -73,16 +72,15 @@ func (s *UserService) generatePasswordHash(password string) string {
 }
 
 func (s *UserService) ParseToken(accessToken string) (int, error) {
-	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			fmt.Println("1")
-			return nil, nil
-		}
+	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{},
+		func(token *jwt.Token) (interface{}, error) {
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return 0, nil
+			}
 
-		return []byte(signingKey), nil
-	})
+			return []byte(signingKey), nil
+		})
 	if err != nil {
-		fmt.Println(err)
 		return 0, err
 	}
 

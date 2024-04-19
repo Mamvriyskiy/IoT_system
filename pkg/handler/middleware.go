@@ -1,23 +1,21 @@
 package handler
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
-	"fmt"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) userIdentity(c *gin.Context) {
 	header := c.GetHeader("Authorization")
 	if header == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization header is required"})
-		return 
+		return
 	}
 
 	headerParts := strings.Split(header, " ")
-	fmt.Println(headerParts)
 	if len(headerParts) != 2 {
-		fmt.Println("invalid auth header")
 		return
 	}
 
@@ -28,4 +26,3 @@ func (h *Handler) userIdentity(c *gin.Context) {
 
 	c.Set("userID", userID)
 }
-

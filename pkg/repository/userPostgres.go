@@ -23,7 +23,7 @@ func (r *UserPostgres) CreateUser(user pkg.User) (int, error) {
 	if err := row.Scan(&id); err != nil {
 		return 0, err
 	}
-	fmt.Println(id)
+
 	return id, nil
 }
 

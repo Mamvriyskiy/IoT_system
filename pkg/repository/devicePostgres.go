@@ -17,13 +17,15 @@ func NewDevicePostgres(db *sqlx.DB) *DevicePostgres {
 
 func (r *DevicePostgres) CreateDevice(userID int, device *pkg.Devices) (int, error) {
 	var homeID int
-	queryHomeID := `select h.homeid from home h 
+	const queryHomeID = `select h.homeid from home h 
 	where h.homeid in (select a.homeid from accesshome a 
 		where a.accessid in (select a.accessid from accessclient a 
 			JOIN access ac ON a.accessid = ac.accessid where clientid = $1 AND accessLevel = 4));`
-	
+
 	err := r.db.Get(&homeID, queryHomeID, userID)
-	fmt.Println(err, homeID)
+	if err != nil {
+		return 0, err
+	}
 
 	var id int
 	query := fmt.Sprintf(`INSERT INTO %s (name, TypeDevice, Status, 
@@ -47,25 +49,21 @@ func (r *DevicePostgres) CreateDevice(userID int, device *pkg.Devices) (int, err
 }
 
 func (r *DevicePostgres) DeleteDevice(userID int, name string) error {
-	fmt.Println("====")
 	var homeID int
-	queryHomeID := `select h.homeid from home h 
+	const queryHomeID = `select h.homeid from home h 
 	where h.homeid in (select a.homeid from accesshome a 
 		where a.accessid in (select a.accessid from accessclient a 
 			JOIN access ac ON a.accessid = ac.accessid where clientid = $1 AND accessLevel = 4));`
-	
+
 	err := r.db.Get(&homeID, queryHomeID, userID)
-	fmt.Println(err, homeID)
 	if err != nil {
 		return err
 	}
-	fmt.Println("====")
 	var deviceID int
 	queryDeviceID := `select d.deviceid from device d 
 	join devicehome d2 on d.deviceid = d2.deviceid 
 		where d2.homeid = $1 and d.name = $2;`
 	err = r.db.Get(&deviceID, queryDeviceID, homeID, name)
-	fmt.Println(err, homeID)
 	if err != nil {
 		return err
 	}

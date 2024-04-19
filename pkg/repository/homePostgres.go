@@ -29,7 +29,6 @@ func (r *HomePostgres) ListUserHome(userID int) ([]pkg.Home, error) {
 	return homeList, nil
 }
 
-
 func (r *HomePostgres) CreateHome(ownerID int, home pkg.Home) (int, error) {
 	var id int
 	query := fmt.Sprintf("INSERT INTO %s (ownerid, name) values ($1, $2) RETURNING homeID", "home")
@@ -43,19 +42,20 @@ func (r *HomePostgres) CreateHome(ownerID int, home pkg.Home) (int, error) {
 
 func (r *HomePostgres) DeleteHome(userID int) error {
 	var homeID int
-	queryHomeID := `select h.homeid from home h 
+	const queryHomeID = `select h.homeid from home h 
 	where h.homeid in (select a.homeid from accesshome a 
 		where a.accessid in (select a.accessid from accessclient a 
 			JOIN access ac ON a.accessid = ac.accessid where clientid = $1 AND accessLevel = 4));`
-	
+
 	err := r.db.Get(&homeID, queryHomeID, userID)
-	fmt.Println("1", err, homeID)
-	
+	if err != nil {
+		return err
+	}
+
 	query1 := `DELETE FROM access 
 		WHERE accessid IN (SELECT accessid 
 			FROM accesshome WHERE homeid = $1);`
 	_, err = r.db.Exec(query1, homeID)
-	fmt.Println("2", err)
 	if err != nil {
 		return err
 	}
@@ -65,7 +65,6 @@ func (r *HomePostgres) DeleteHome(userID int) error {
 			FROM historydevice WHERE deviceid 
 				IN (SELECT deviceid FROM devicehome WHERE homeid = $1));`
 	_, err = r.db.Exec(query2, homeID)
-	fmt.Println("3", err)
 	if err != nil {
 		return err
 	}
@@ -94,9 +93,13 @@ func (r *HomePostgres) UpdateHome(home pkg.Home) error {
 	where h.homeid in (select a.homeid from accesshome a 
 		where a.accessid in (select a.accessid from accessclient a 
 			JOIN access ac ON a.accessid = ac.accessid where clientid = $1 AND accessLevel = 4));`
-	
+
 	err := r.db.Get(&homeID, queryHomeID, home.OwnerID)
-	fmt.Println(err, home.Name, homeID)
+	if err != nil {
+		// Обработка ошибки, если запрос не удалось выполнить
+
+		return err
+	}
 
 	query := `UPDATE home
 		SET name = $1

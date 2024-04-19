@@ -17,20 +17,21 @@ func NewAccessHomePostgres(db *sqlx.DB) *AccessHomePostgres {
 
 func (r *AccessHomePostgres) AddUser(userID, accessLevel int, email string) (int, error) {
 	var homeID int
-	queryHomeID := `select h.homeid from home h 
+	const queryHomeID = `select h.homeid from home h 
 	where h.homeid in (select a.homeid from accesshome a 
 		where a.accessid in (select a.accessid from accessclient a 
 			JOIN access ac ON a.accessid = ac.accessid where clientid = $1 AND accessLevel = 4));`
-		
+
 	err := r.db.Get(&homeID, queryHomeID, userID)
-	fmt.Println(err, homeID)
+	if err != nil {
+		return 0, err
+	}
 
 	var id int
 	query := fmt.Sprintf(`INSERT INTO %s (accessStatus, accessLevel) 
 		values ($1, $2) RETURNING accessID`, "access")
 	row := r.db.QueryRow(query, "active", accessLevel)
 	err = row.Scan(&id)
-	fmt.Println("1", err)
 	if err != nil {
 		return 0, err
 	}
@@ -38,11 +39,13 @@ func (r *AccessHomePostgres) AddUser(userID, accessLevel int, email string) (int
 	var newUserID int
 	queryUserID := `select c.clientID from client c where email = $1;`
 	err = r.db.Get(&newUserID, queryUserID, email)
+	if err != nil {
+		return 0, err
+	}
 
 	query2 := fmt.Sprintf("INSERT INTO %s (clientID, accessID) VALUES ($1, $2)", "accessClient")
 
 	result, err := r.db.Exec(query2, newUserID, id)
-	fmt.Println("2", err)
 	if err != nil {
 		// Обработка ошибки, если запрос не удалось выполнить
 		return 0, err
@@ -74,7 +77,6 @@ func (r *AccessHomePostgres) AddOwner(userID, homeID int) (int, error) {
 		values ($1, $2) RETURNING accessID`, "access")
 	row := r.db.QueryRow(query, "active", 4)
 	err := row.Scan(&id)
-	fmt.Println("1", err)
 	if err != nil {
 		return 0, err
 	}
@@ -82,7 +84,6 @@ func (r *AccessHomePostgres) AddOwner(userID, homeID int) (int, error) {
 	query2 := fmt.Sprintf("INSERT INTO %s (clientID, accessID) VALUES ($1, $2)", "accessClient")
 
 	result, err := r.db.Exec(query2, userID, id)
-	fmt.Println("2", err)
 	if err != nil {
 		// Обработка ошибки, если запрос не удалось выполнить
 		return 0, err
@@ -149,12 +150,14 @@ func (r *AccessHomePostgres) GetListUserHome(idHome int) ([]pkg.ClientHome, erro
 
 func (r *AccessHomePostgres) DeleteUser(userID int, email string) error {
 	var homeID int
-	queryHomeID := `select h.homeid from home h 
+	const queryHomeID = `select h.homeid from home h 
 	where h.homeid in (select a.homeid from accesshome a 
 		where a.accessid in (select a.accessid from accessclient a 
 			JOIN access ac ON a.accessid = ac.accessid where clientid = $1 AND accessLevel = 4));`
 	err := r.db.Get(&homeID, queryHomeID, userID)
-	fmt.Println(err, homeID)
+	if err != nil {
+		return err
+	}
 
 	query := `delete from access where accessid = 
 	(select accessid from accesshome 

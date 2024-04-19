@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -13,42 +14,38 @@ import (
 )
 
 type UserResponse struct {
-	ID       int    `json: "id"`
-	Token    string `json: "token"`
-	HomeID   int    `json: "homeId"`
-	HomeName string `json: "name"`
+	Token    string `json:"token"`
+	HomeName string `json:"name"`
+	ID       int    `json:"id"`
+	HomeID   int    `json:"homeId"`
 }
-
-var (
-	TOKEN string
-)
 
 func menu() {
-	fmt.Println(`
-		1)Создать дом
-		2)Удалить дом
-		3)Обновить имя дома
-		4)Добавить устройство
-		5)Удалить устройство
-		6)Добавить участника
-		7)Удалить участника
-		8)Просмотреть статистику
-		9)Запустить устройство
-		0)Завершить работу
-	`)
+	fmt.Fprintf(os.Stdout, `
+		1) Создать дом
+		2) Удалить дом
+		3) Обновить имя дома
+		4) Добавить участника
+		5) Удалить участника
+		6) Добавить устройство
+		7) Удалить устройство
+		8) Просмотреть статистику
+		9) Запустить устройство
+		0) Завершить работу
+`)
 }
 
-func checkStat() error {
+func checkStat(token string) error {
 	var device string
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Введите имя устройства: ")
+	fmt.Fprintf(os.Stdout, "Введите имя устройства: ")
 	_, err := fmt.Fscanf(reader, "%s\n", &device)
 	if err != nil {
 		return err
 	}
 
 	data := pkg.AddHistory{
-		Name:       device,
+		Name: device,
 	}
 
 	jsonData, err := json.Marshal(data)
@@ -56,8 +53,7 @@ func checkStat() error {
 		return err
 	}
 
-	_, err = requestServer("GET", "/api/history", jsonData)
-
+	_, err = requestServer("GET", "/api/history", jsonData, token)
 	if err != nil {
 		return err
 	}
@@ -65,17 +61,17 @@ func checkStat() error {
 	return nil
 }
 
-func runDevice() error {
+func runDevice(token string) error {
 	var device string
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Введите имя устройства: ")
+	fmt.Fprintf(os.Stdout, "Введите имя устройства: ")
 	_, err := fmt.Fscanf(reader, "%s\n", &device)
 	if err != nil {
 		return err
 	}
 
 	data := pkg.AddHistory{
-		Name:       device,
+		Name: device,
 	}
 
 	jsonData, err := json.Marshal(data)
@@ -83,8 +79,7 @@ func runDevice() error {
 		return err
 	}
 
-	_, err = requestServer("POST", "/api/history", jsonData)
-
+	_, err = requestServer("POST", "/api/history", jsonData, token)
 	if err != nil {
 		return err
 	}
@@ -92,17 +87,17 @@ func runDevice() error {
 	return nil
 }
 
-func deleteUser() error {
+func deleteUser(token string) error {
 	var email string
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Введите почту пользователя: ")
+	fmt.Fprintf(os.Stdout, "Введите почту пользователя: ")
 	_, err := fmt.Fscanf(reader, "%s\n", &email)
 	if err != nil {
 		return err
 	}
 
 	data := pkg.AddUserHome{
-		Email:       email,
+		Email: email,
 	}
 
 	jsonData, err := json.Marshal(data)
@@ -110,8 +105,7 @@ func deleteUser() error {
 		return err
 	}
 
-	_, err = requestServer("POST", "/api/access", jsonData)
-
+	_, err = requestServer("POST", "/api/access", jsonData, token)
 	if err != nil {
 		return err
 	}
@@ -119,17 +113,17 @@ func deleteUser() error {
 	return nil
 }
 
-func addUser() error {
+func addUser(token string) error {
 	var email string
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Введите почту пользователя: ")
+	fmt.Fprintf(os.Stdout, "Введите почту пользователя: ")
 	_, err := fmt.Fscanf(reader, "%s\n", &email)
 	if err != nil {
 		return err
 	}
 
 	var level int
-	fmt.Print("Введите уровень доступа: ")
+	fmt.Fprintf(os.Stdout, "Введите уровень доступа: ")
 	_, err = fmt.Fscanf(reader, "%d\n", &level)
 	if err != nil {
 		return err
@@ -145,8 +139,7 @@ func addUser() error {
 		return err
 	}
 
-	_, err = requestServer("POST", "/api/access", jsonData)
-
+	_, err = requestServer("POST", "/api/access", jsonData, token)
 	if err != nil {
 		return err
 	}
@@ -154,10 +147,10 @@ func addUser() error {
 	return nil
 }
 
-func deleteDevice() error {
+func deleteDevice(token string) error {
 	var deviceName string
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Введите имя устройства: ")
+	fmt.Fprintf(os.Stdout, "Введите имя устройства: ")
 	_, err := fmt.Fscanf(reader, "%s\n", &deviceName)
 	if err != nil {
 		return err
@@ -172,7 +165,7 @@ func deleteDevice() error {
 		return err
 	}
 
-	_, err = requestServer("DELETE", "/api/device", jsonData)
+	_, err = requestServer("DELETE", "/api/device", jsonData, token)
 	if err != nil {
 		return err
 	}
@@ -180,10 +173,10 @@ func deleteDevice() error {
 	return nil
 }
 
-func addDevice() error {
+func addDevice(token string) error {
 	var deviceName string
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Введите имя устройства: ")
+	fmt.Fprintf(os.Stdout, "Введите имя устройства: ")
 	_, err := fmt.Fscanf(reader, "%s\n", &deviceName)
 	if err != nil {
 		return err
@@ -204,7 +197,7 @@ func addDevice() error {
 		return err
 	}
 
-	_, err = requestServer("POST", "/api/device", jsonData)
+	_, err = requestServer("POST", "/api/device", jsonData, token)
 	if err != nil {
 		return err
 	}
@@ -215,19 +208,19 @@ func addDevice() error {
 func registerUser() error {
 	var password, username, email string
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Введите имя пользователя: ")
+	fmt.Fprintf(os.Stdout, "Введите имя пользователя: ")
 	_, err := fmt.Fscanf(reader, "%s\n", &username)
 	if err != nil {
 		return err
 	}
 
-	fmt.Print("Введите почту: ")
+	fmt.Fprintf(os.Stdout, "Введите почту: ")
 	_, err = fmt.Fscanf(reader, "%s\n", &email)
 	if err != nil {
 		return err
 	}
 
-	fmt.Print("Введите пароль: ")
+	fmt.Fprintf(os.Stdout, "Введите пароль: ")
 	_, err = fmt.Fscanf(reader, "%s\n", &password)
 	if err != nil {
 		return err
@@ -244,7 +237,7 @@ func registerUser() error {
 		return err
 	}
 
-	_, err = requestServer("POST", "/auth/sign-up", jsonData)
+	_, err = requestServer("POST", "/auth/sign-up", jsonData, "")
 	if err != nil {
 		return err
 	}
@@ -252,19 +245,19 @@ func registerUser() error {
 	return nil
 }
 
-func auth() error {
+func auth() (string, error) {
 	var password, username string
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Введите имя пользователя: ")
+	fmt.Fprintf(os.Stdout, "Введите имя пользователя: ")
 	_, err := fmt.Fscanf(reader, "%s\n", &username)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	fmt.Print("Введите пароль: ")
+	fmt.Fprintf(os.Stdout, "Введите пароль: ")
 	_, err = fmt.Fscanf(reader, "%s\n", &password)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	data := map[string]string{
@@ -274,23 +267,21 @@ func auth() error {
 
 	jsonData, err := json.Marshal(data)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	result, err := requestServer("POST", "/auth/sign-in", jsonData)
+	result, err := requestServer("POST", "/auth/sign-in", jsonData, "")
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	TOKEN = result
-
-	return nil
+	return result, nil
 }
 
-func createHome() error {
+func createHome(token string) error {
 	var nameHome string
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Введите имя дома: ")
+	fmt.Fprintf(os.Stdout, "Введите имя дома: ")
 	_, err := fmt.Fscanf(reader, "%s\n", &nameHome)
 	if err != nil {
 		return err
@@ -305,16 +296,15 @@ func createHome() error {
 		return err
 	}
 
-	_, err = requestServer("POST", "/api/home", jsonData)
+	_, err = requestServer("POST", "/api/home", jsonData, token)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 
 	return nil
 }
 
-func deleteHome() error {
+func deleteHome(token string) error {
 	data := map[string]string{
 		// "homeId": string(user.ID),
 	}
@@ -324,19 +314,18 @@ func deleteHome() error {
 		return err
 	}
 
-	_, err = requestServer("DELETE", "/api/home", jsonData)
+	_, err = requestServer("DELETE", "/api/home", jsonData, token)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 
 	return nil
 }
 
-func updateHome() error {
+func updateHome(token string) error {
 	var newHomeName string
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Введите имя дома: ")
+	fmt.Fprintf(os.Stdout, "Введите имя дома: ")
 	fmt.Fscan(reader, &newHomeName)
 
 	data := map[string]string{
@@ -348,44 +337,44 @@ func updateHome() error {
 		return err
 	}
 
-	_, err = requestServer("PUT", "/api/home", jsonData)
+	_, err = requestServer("PUT", "/api/home", jsonData, token)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 
 	return nil
 }
 
-func getListHomeByUser() error {
-	data := map[string]string{}
+// func getListHomeByUser() error {
+// 	data := map[string]string{}
 
-	jsonData, err := json.Marshal(data)
+// 	jsonData, err := json.Marshal(data)
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	_, err = requestServer("GET", "/api/home", jsonData)
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	return nil
+// }
+
+func requestServer(typeReq, path string, jsonData []byte, token string) (string, error) {
+	ctx := context.Background()
+	req, err := http.NewRequestWithContext(ctx, typeReq,
+		"http://localhost:8000"+path, bytes.NewBuffer(jsonData))
+
+	// req, err := http.NewRequest(typeReq, "http://localhost:8000"+path, bytes.NewBuffer(jsonData))
+	req.Header.Set("Authorization", "Bearer "+token)
 	if err != nil {
-		return err
-	}
-
-	_, err = requestServer("GET", "/api/home", jsonData)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-
-	return nil
-}
-
-func requestServer(typeReq, path string, jsonData []byte) (string, error) {
-	req, err := http.NewRequest(typeReq, "http://localhost:8000"+path, bytes.NewBuffer(jsonData))
-	req.Header.Set("Authorization", "Bearer "+TOKEN)
-	if err != nil {
-		fmt.Println(err)
 		return "", err
 	}
 
 	client := http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println(err)
 		return "", err
 	}
 	defer resp.Body.Close()
@@ -396,9 +385,9 @@ func requestServer(typeReq, path string, jsonData []byte) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		fmt.Println("Тело ответа:", string(responseBody))
+		fmt.Fprint(os.Stdout, "Тело ответа:", string(responseBody))
 	} else {
-		fmt.Println("Сервер вернул статус:", resp.Status)
+		fmt.Fprint(os.Stdout, "Сервер вернул статус:", resp.Status)
 	}
 
 	var userResponse UserResponse
@@ -411,73 +400,77 @@ func requestServer(typeReq, path string, jsonData []byte) (string, error) {
 	return userResponse.Token, nil
 }
 
-func clientGO() {
+func clientGO(token string) {
 	for {
-		var num int
 		menu()
+
+		var num int
 		reader := bufio.NewReader(os.Stdin)
-		fmt.Print("Выберите номер: ")
+		fmt.Fprint(os.Stdout, "Выберите номер: ")
 		_, err := fmt.Fscanf(reader, "%d\n", &num)
 		if err != nil {
-			fmt.Println(err)
 			continue
 		}
+		handleOption(num, token)
+	}
+}
 
-		switch num {
-		case 1:
-			err := createHome()
-			if err != nil {
-				fmt.Println("Error:", err)
-			}
-		case 2:
-			err := deleteHome()
-			if err != nil {
-				fmt.Println("Error:", err)
-			}
-		case 3:
-			err := updateHome()
-			if err != nil {
-				fmt.Println("Error:", err)
-			}
-		case 4:
-			err := addDevice()
-			if err != nil {
-				fmt.Println("Error:", err)
-			}
-		case 5:
-			err := deleteDevice()
-			if err != nil {
-				fmt.Println("Error:", err)
-			}
-		case 6:
-			err := addUser()
-			if err != nil {
-				fmt.Println("Error:", err)
-			}
-		case 7:
-			err := deleteUser()
-			if err != nil {
-				fmt.Println("Error:", err)
-			}
-		case 8:
-			err := checkStat()
-			if err != nil {
-				fmt.Println("Error:", err)
-			}
-		case 9:
-			err := runDevice()
-			if err != nil {
-				fmt.Println("Error:", err)
-			}
-		default:
-			break
-		}
+func handleOption(num int, token string) {
+	switch {
+	case num < 4 && num > 0:
+		handleHome(num, token)
+	case num >= 6 && num <= 9:
+		handleDevice(num, token)
+	case num == 4 || num == 5:
+		handleAccess(num, token)
+	default:
+		break
+	}
+}
+
+func handleAccess(num int, token string) {
+	switch num {
+	case 4:
+		handleAction(addUser, token)
+	case 5:
+		handleAction(deleteUser, token)
+	}
+}
+
+func handleDevice(num int, token string) {
+	switch num {
+	case 6:
+		handleAction(addDevice, token)
+	case 7:
+		handleAction(deleteDevice, token)
+	case 8:
+		handleAction(checkStat, token)
+	case 9:
+		handleAction(runDevice, token)
+	}
+}
+
+func handleHome(num int, token string) {
+	switch num {
+	case 1:
+		handleAction(createHome, token)
+	case 2:
+		handleAction(deleteHome, token)
+	case 3:
+		handleAction(updateHome, token)
+	}
+}
+
+func handleAction(action func(string) error, token string) {
+	if err := action(token); err != nil {
+		return
 	}
 }
 
 func main() {
 	var err error
-	fmt.Println(`
+	var token string
+	fmt.Fprintln(os.Stdout, `
 		Меню:
 		1)Регистрация
 		2)Войти
@@ -488,18 +481,18 @@ func main() {
 	case 1:
 		err = registerUser()
 		if err != nil {
-			fmt.Println("Error:", err)
+			return
 		}
 	case 2:
-		err = auth()
+		token, err = auth()
 		if err != nil {
-			fmt.Println("Error:", err)
+			return
 		}
 	}
 
 	if err == nil {
-		clientGO()
+		clientGO(token)
 	} else {
-		fmt.Println("Ошибка!")
+		return
 	}
 }

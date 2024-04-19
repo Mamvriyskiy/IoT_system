@@ -7,8 +7,8 @@ type ClientHome struct {
 }
 
 type AddUserHome struct {
-	AccessLevel int    `json: "accessLevel"`
-	Email       string `json: "email"`
+	Email       string `json:"email"`
+	AccessLevel int    `json:"accessLevel"`
 }
 
 type AddHistory struct {

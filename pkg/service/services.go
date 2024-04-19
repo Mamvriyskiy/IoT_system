@@ -26,7 +26,7 @@ type IAccessHome interface {
 	UpdateLevel(idUser int, access pkg.AccessHome) error
 	UpdateStatus(idUser int, access pkg.AccessHome) error
 	GetListUserHome(homeID int) ([]pkg.ClientHome, error)
-	AddOwner(userID, homeID int) (int, error) 
+	AddOwner(userID, homeID int) (int, error)
 }
 
 type IDevice interface {
