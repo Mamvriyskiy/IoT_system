@@ -5,6 +5,7 @@ import (
 
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/jmoiron/sqlx"
+	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 )
 
 type DeviceHistoryPostgres struct {
@@ -25,6 +26,7 @@ func (r *DeviceHistoryPostgres) CreateDeviceHistory(userID int,
 			JOIN access ac ON a.accessid = ac.accessid where clientid = $1));`
 	err := r.db.Get(&homeID, queryHomeID, userID)
 	if err != nil {
+		logger.Log("Error", "Get", "Error select from home:", err, userID)
 		return 0, err
 	}
 
@@ -34,6 +36,7 @@ func (r *DeviceHistoryPostgres) CreateDeviceHistory(userID int,
 			where dh.homeid = $1 and d.name = $2;`
 	err = r.db.Get(&deviceID, querDeviceID, homeID, history.Name)
 	if err != nil {
+		logger.Log("Error", "Get", "Error select from device:", err, homeID, history.Name)
 		return 0, err
 	}
 
@@ -44,25 +47,22 @@ func (r *DeviceHistoryPostgres) CreateDeviceHistory(userID int,
 	row := r.db.QueryRow(query, history.TimeWork, history.AverageIndicator, history.EnergyConsumed)
 	err = row.Scan(&id)
 	if err != nil {
+		logger.Log("Error", "Scan", "Error instert into historyDevID:", err, 
+			history.TimeWork, history.AverageIndicator, history.EnergyConsumed)
 		return 0, err
 	}
 
 	query = fmt.Sprintf("INSERT INTO %s (deviceID, historydevID) VALUES ($1, $2)", "historydevice")
 	result, err := r.db.Exec(query, deviceID, id)
 	if err != nil {
-		// Обработка ошибки, если запрос не удалось выполнить
+		logger.Log("Error", "Exec", "Error insert into historydevice:", err, deviceID, id)
 		return 0, err
 	}
 
-	rowsAffected, err := result.RowsAffected()
+	_, err = result.RowsAffected()
 	if err != nil {
-		// Обработка ошибки, если не удалось получить количество затронутых строк
-
+		logger.Log("Error", "RowsAffected", "Error insert into historydevice:", err)
 		return 0, err
-	}
-
-	if rowsAffected == 0 {
-		return 0, nil
 	}
 
 	return id, nil
@@ -79,6 +79,7 @@ func (r *DeviceHistoryPostgres) GetDeviceHistory(userID int,
 			id where clientid = $1));`
 	err := r.db.Get(&homeID, queryHomeID, userID)
 	if err != nil {
+		logger.Log("Error", "Get", "Error select from home:", err, userID)
 		return nil, err
 	}
 

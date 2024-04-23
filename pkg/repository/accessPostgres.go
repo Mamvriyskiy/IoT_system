@@ -5,6 +5,7 @@ import (
 
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/jmoiron/sqlx"
+	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 )
 
 type AccessHomePostgres struct {
@@ -24,6 +25,7 @@ func (r *AccessHomePostgres) AddUser(userID, accessLevel int, email string) (int
 
 	err := r.db.Get(&homeID, queryHomeID, userID)
 	if err != nil {
+		logger.Log("Error", "Get", "Error get homeID:", err, &homeID, queryHomeID, userID)
 		return 0, err
 	}
 
@@ -33,6 +35,7 @@ func (r *AccessHomePostgres) AddUser(userID, accessLevel int, email string) (int
 	row := r.db.QueryRow(query, "active", accessLevel)
 	err = row.Scan(&id)
 	if err != nil {
+		logger.Log("Error", "Scan", "Error insert faccess:", err, &id)
 		return 0, err
 	}
 
@@ -40,6 +43,7 @@ func (r *AccessHomePostgres) AddUser(userID, accessLevel int, email string) (int
 	queryUserID := `select c.clientID from client c where email = $1;`
 	err = r.db.Get(&newUserID, queryUserID, email)
 	if err != nil {
+		logger.Log("Error", "Get", "Error get newUserID:", err, &newUserID, queryUserID, email)
 		return 0, err
 	}
 
@@ -47,26 +51,18 @@ func (r *AccessHomePostgres) AddUser(userID, accessLevel int, email string) (int
 
 	result, err := r.db.Exec(query2, newUserID, id)
 	if err != nil {
-		// Обработка ошибки, если запрос не удалось выполнить
+		logger.Log("Error", "Exec", "Error insert into accessClient:", err, newUserID, id)
 		return 0, err
 	}
 
-	rowsAffected, err := result.RowsAffected()
+	_, err = result.RowsAffected()
 	if err != nil {
-		// Обработка ошибки, если не удалось получить количество затронутых строк
-
+		logger.Log("Error", "RowsAffected", "Error insert into accessClient:", err, "")
 		return 0, err
-	}
-
-	if rowsAffected == 0 {
-		return 0, nil
 	}
 
 	query3 := fmt.Sprintf("INSERT INTO %s (homeID, accessID) VALUES ($1, $2)", "accessHome")
 	r.db.QueryRow(query3, homeID, id)
-	if err != nil {
-		return 0, err
-	}
 
 	return id, nil
 }
@@ -78,6 +74,7 @@ func (r *AccessHomePostgres) AddOwner(userID, homeID int) (int, error) {
 	row := r.db.QueryRow(query, "active", 4)
 	err := row.Scan(&id)
 	if err != nil {
+		logger.Log("Error", "Scan", "Error insert into access:", err, "")
 		return 0, err
 	}
 
@@ -85,24 +82,23 @@ func (r *AccessHomePostgres) AddOwner(userID, homeID int) (int, error) {
 
 	result, err := r.db.Exec(query2, userID, id)
 	if err != nil {
-		// Обработка ошибки, если запрос не удалось выполнить
+		logger.Log("Error", "Exec", "Error insert into accessClient:", err, "")
 		return 0, err
 	}
 
-	rowsAffected, err := result.RowsAffected()
+	_, err = result.RowsAffected()
 	if err != nil {
-		// Обработка ошибки, если не удалось получить количество затронутых строк
-
+		logger.Log("Error", "RowsAffected", "Error insert into accessClient:", err, "")
 		return 0, err
-	}
-
-	if rowsAffected == 0 {
-		return 0, nil
 	}
 
 	query3 := fmt.Sprintf("INSERT INTO %s (homeID, accessID) VALUES ($1, $2)", "accessHome")
 	r.db.QueryRow(query3, homeID, id)
+	var idT int
+	rowT := r.db.QueryRow(query3, homeID, id)
+	err = rowT.Scan(&idT)
 	if err != nil {
+		logger.Log("Error", "Scan", "Error insert into accessHome:", err, "")
 		return 0, err
 	}
 
@@ -142,6 +138,7 @@ func (r *AccessHomePostgres) GetListUserHome(idHome int) ([]pkg.ClientHome, erro
 							where ah.homeid = $1;`
 	err := r.db.Select(&lists, query, idHome)
 	if err != nil {
+		logger.Log("Error", "Select", "Error select ClientHome:", err, "")
 		return nil, err
 	}
 
@@ -155,7 +152,9 @@ func (r *AccessHomePostgres) DeleteUser(userID int, email string) error {
 		where a.accessid in (select a.accessid from accessclient a 
 			JOIN access ac ON a.accessid = ac.accessid where clientid = $1 AND accessLevel = 4));`
 	err := r.db.Get(&homeID, queryHomeID, userID)
+
 	if err != nil {
+		logger.Log("Error", "Get", "Error get homeID:", err, "")
 		return err
 	}
 
