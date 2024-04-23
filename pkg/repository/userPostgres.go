@@ -2,7 +2,7 @@ package repository
 
 import (
 	"fmt"
-
+	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/jmoiron/sqlx"
 )
@@ -21,6 +21,7 @@ func (r *UserPostgres) CreateUser(user pkg.User) (int, error) {
 		values ($1, $2, $3) RETURNING clientid`, "client")
 	row := r.db.QueryRow(query, user.Password, user.Username, user.Email)
 	if err := row.Scan(&id); err != nil {
+		logger.Log("Error", "Scan", "Error insert into client:", err, id)
 		return 0, err
 	}
 

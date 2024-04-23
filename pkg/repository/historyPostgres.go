@@ -98,6 +98,7 @@ func (r *DeviceHistoryPostgres) GetDeviceHistory(userID int,
 			where hd.deviceid = $1`
 	err = r.db.Select(&lists, query, deviceID)
 	if err != nil {
+		logger.Log("Error", "Select", "Error Select from historydev:", err, deviceID)
 		return nil, err
 	}
 

@@ -5,13 +5,14 @@ import (
 
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
+	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 )
 
 func (h *Handler) signUp(c *gin.Context) {
 	var input pkg.User
 
 	if err := c.BindJSON(&input); err != nil {
-		// *TODO: log
+		logger.Log("Error", "c.BindJSON()", "Error bind json:", err, "")
 		return
 	}
 
@@ -36,7 +37,7 @@ type signInInput struct {
 func (h *Handler) signIn(c *gin.Context) {
 	var input signInInput
 	if err := c.BindJSON(&input); err != nil {
-		// *TODO: log
+		logger.Log("Error", "c.BindJSON()", "Error bind json:", err, "")
 		return
 	}
 

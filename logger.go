@@ -18,7 +18,13 @@ func Log(level, nameFunc, event string, err error, additionalParams ...interface
             err.Error(),
             zap.String("event", event),
             zap.String("func", nameFunc),
-            zap.Any("param", additionalParams), )
+            zap.Any("param", additionalParams), 
+		)
 	case "Warning":
+		logger.Warn(
+            "event: " + event,
+			zap.String("func", nameFunc),
+			zap.Any("param", additionalParams),
+		)
 	}
 }
