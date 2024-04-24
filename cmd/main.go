@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
 	"os"
 
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/logger"
@@ -11,6 +13,10 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
+
+func home_page(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "<b>Main Text</b>")
+}
 
 func main() {
 	if err := initConfig(); err != nil {

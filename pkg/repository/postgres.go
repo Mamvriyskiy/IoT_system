@@ -4,8 +4,9 @@ import (
 	"fmt"
 
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/logger"
-	// Импорт драйвера PostgreSQL для его регистрации.
 	"github.com/jmoiron/sqlx"
+	// Импорт драйвера PostgreSQL для его регистрации.
+	_ "github.com/lib/pq"
 )
 
 type Config struct {
