@@ -3,8 +3,7 @@ package handler
 import (
 	"net/http"
 
-	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
-	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/logger"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
 )

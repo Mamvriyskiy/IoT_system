@@ -3,10 +3,9 @@ package repository
 import (
 	"fmt"
 
-	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
-	"github.com/jmoiron/sqlx"
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/logger"
 	// Импорт драйвера PostgreSQL для его регистрации.
-	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
+	"github.com/jmoiron/sqlx"
 )
 
 type Config struct {

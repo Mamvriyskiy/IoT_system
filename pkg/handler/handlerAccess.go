@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/logger"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
 )
@@ -23,7 +23,7 @@ func (h *Handler) addUser(c *gin.Context) {
 
 	idAccess, err := h.services.IAccessHome.AddUser(userID.(int), input.AccessLevel, input.Email)
 	if err != nil {
-		logger.Log("Error", "AddUser", "Error create access:", 
+		logger.Log("Error", "AddUser", "Error create access:",
 			err, userID.(int), input.AccessLevel, input.Email)
 		return
 	}
