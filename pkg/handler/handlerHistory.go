@@ -5,9 +5,9 @@ import (
 	"math/big"
 	"net/http"
 
+	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
-	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 )
 
 func generateRandomInt(max int) int {
@@ -57,6 +57,8 @@ func (h *Handler) createDeviceHistory(c *gin.Context) {
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"idHistory": idHistory,
 	})
+
+	logger.Log("Info", "", "The device's history has been created", nil)
 }
 
 type getAllListResponse struct {
@@ -85,4 +87,6 @@ func (h *Handler) getDeviceHistory(c *gin.Context) {
 	c.JSON(http.StatusOK, getAllListResponse{
 		Data: input,
 	})
+
+	logger.Log("Info", "", "The history of the device was obtained", nil)
 }

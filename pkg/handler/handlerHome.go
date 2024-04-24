@@ -3,8 +3,9 @@ package handler
 import (
 	"net/http"
 
-	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
+	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
 )
 
@@ -39,6 +40,8 @@ func (h *Handler) createHome(c *gin.Context) {
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"homeId": homeID,
 	})
+
+	logger.Log("Info", "", "A home has been created", nil)
 }
 
 func (h *Handler) deleteHome(c *gin.Context) {
@@ -53,6 +56,8 @@ func (h *Handler) deleteHome(c *gin.Context) {
 		logger.Log("Error", "DeleteHome", "Error delete home:", err, id.(int))
 		return
 	}
+
+	logger.Log("Info", "", "A home has been deleted", nil)
 }
 
 type getAllListHomeResponse struct {
@@ -75,6 +80,8 @@ func (h *Handler) listHome(c *gin.Context) {
 	c.JSON(http.StatusOK, getAllListHomeResponse{
 		Data: homeListUser,
 	})
+
+	logger.Log("Info", "", "The list of users has been received", nil)
 }
 
 func (h *Handler) updateHome(c *gin.Context) {
@@ -91,7 +98,6 @@ func (h *Handler) updateHome(c *gin.Context) {
 		return
 	}
 
-
 	input.OwnerID, ok = id.(int)
 	if !ok {
 		logger.Log("Warning", "*.(int)", "Error convert to int", nil, id)
@@ -103,4 +109,6 @@ func (h *Handler) updateHome(c *gin.Context) {
 		logger.Log("Error", "UpdateHome", "Error update home:", err, "")
 		return
 	}
+
+	logger.Log("Info", "", "A home has been deleted", nil)
 }

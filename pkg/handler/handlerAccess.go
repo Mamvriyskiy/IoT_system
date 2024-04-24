@@ -3,9 +3,9 @@ package handler
 import (
 	"net/http"
 
+	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
-	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 )
 
 func (h *Handler) addUser(c *gin.Context) {
@@ -23,13 +23,16 @@ func (h *Handler) addUser(c *gin.Context) {
 
 	idAccess, err := h.services.IAccessHome.AddUser(userID.(int), input.AccessLevel, input.Email)
 	if err != nil {
-		logger.Log("Error", "AddUser", "Error create access:", err, userID.(int), input.AccessLevel, input.Email)
+		logger.Log("Error", "AddUser", "Error create access:", 
+			err, userID.(int), input.AccessLevel, input.Email)
 		return
 	}
 
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"accessID": idAccess,
 	})
+
+	logger.Log("Info", "", "The user has been granted access", nil)
 }
 
 func (h *Handler) deleteUser(c *gin.Context) {
@@ -50,6 +53,8 @@ func (h *Handler) deleteUser(c *gin.Context) {
 		logger.Log("Error", "DeleteUser", "Error delete access:", err, userID.(int), input.Email)
 		return
 	}
+
+	logger.Log("Info", "", "The user's access was deleted", nil)
 }
 
 func (h *Handler) updateLevel(c *gin.Context) {
@@ -65,6 +70,8 @@ func (h *Handler) updateLevel(c *gin.Context) {
 		logger.Log("Error", "UpdateLevel", "Error update access:", err, idUser, input)
 		return
 	}
+
+	logger.Log("Info", "", "A level has been update", nil)
 }
 
 func (h *Handler) updateStatus(c *gin.Context) {
@@ -80,6 +87,8 @@ func (h *Handler) updateStatus(c *gin.Context) {
 		logger.Log("Error", "UpdateStatus", "Error update access:", err, idUser, input)
 		return
 	}
+
+	logger.Log("Info", "", "A status has been update", nil)
 }
 
 type getAllListUserResponse struct {
@@ -97,4 +106,6 @@ func (h *Handler) getListUserHome(c *gin.Context) {
 	c.JSON(http.StatusOK, getAllListUserResponse{
 		Data: listUser,
 	})
+
+	logger.Log("Info", "", "The list of users has been received", nil)
 }

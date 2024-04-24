@@ -5,7 +5,7 @@ import (
 	"encoding/hex"
 	"time"
 
-	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/logger"
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository"
 	jwt "github.com/dgrijalva/jwt-go"
@@ -83,7 +83,6 @@ func (s *UserService) ParseToken(accessToken string) (int, error) {
 
 			return []byte(signingKey), nil
 		})
-
 	if err != nil {
 		logger.Log("Error", "jwt.ParseWithClaims", "Error parse token:", err, accessToken)
 		return 0, err

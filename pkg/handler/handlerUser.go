@@ -1,11 +1,12 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
+	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
-	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 )
 
 func (h *Handler) signUp(c *gin.Context) {
@@ -27,6 +28,8 @@ func (h *Handler) signUp(c *gin.Context) {
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"id": id,
 	})
+
+	logger.Log("Info", "", fmt.Sprintf("User %s is registered", input.Username), nil)
 }
 
 type signInInput struct {
@@ -50,4 +53,6 @@ func (h *Handler) signIn(c *gin.Context) {
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"token": token,
 	})
+
+	logger.Log("Info", "", fmt.Sprintf("User %s ganied access", input.Username), nil)
 }

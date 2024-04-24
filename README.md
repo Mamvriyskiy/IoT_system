@@ -78,4 +78,44 @@
 
 ### UML диаграмма классов
 
-![uml](/img/uml.png)
+![uml](/img/newUml.png)
+
+
+### Сборка проекта
+
+Этот сценарий сборки контейнера Docker, настройки базы данных и запуска сервера может быть использован на любом устройстве, где установлен Docker и где можно выполнить команды Bash. 
+
+Создание контейнера Docker для базы данных:
+```bash
+cd postgresData
+docker-compose up
+```
+
+Подключение к контейнеру:
+```bash
+docker exec -it IoT_system bash
+```
+Подключение к PostgreSQL и выбор базы данных:
+```bash
+psql -U Misfio32
+\c postgres
+```
+
+Выполнение сценариев SQL для создания таблиц и применения ограничений:
+```bash
+\i ./mnt/createTable.sql
+\i ./mnt/limitation.sql
+```
+
+Установка переменной среды и модулей GO:
+```bash
+export GO111MODULE=on
+go mod download
+```
+
+Запуск сервера:
+```bash
+cd ..
+go run ./cmd/main.go
+```
+

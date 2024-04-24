@@ -3,9 +3,9 @@ package repository
 import (
 	"fmt"
 
+	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/jmoiron/sqlx"
-	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 )
 
 type DeviceHistoryPostgres struct {
@@ -47,7 +47,7 @@ func (r *DeviceHistoryPostgres) CreateDeviceHistory(userID int,
 	row := r.db.QueryRow(query, history.TimeWork, history.AverageIndicator, history.EnergyConsumed)
 	err = row.Scan(&id)
 	if err != nil {
-		logger.Log("Error", "Scan", "Error instert into historyDevID:", err, 
+		logger.Log("Error", "Scan", "Error instert into historyDevID:", err,
 			history.TimeWork, history.AverageIndicator, history.EnergyConsumed)
 		return 0, err
 	}

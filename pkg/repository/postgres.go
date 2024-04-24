@@ -3,9 +3,9 @@ package repository
 import (
 	"fmt"
 
+	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 	"github.com/jmoiron/sqlx"
 	// Импорт драйвера PostgreSQL для его регистрации.
-	_ "github.com/lib/pq"
 	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 )
 

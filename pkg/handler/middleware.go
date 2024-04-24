@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	//logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 )
 
 func (h *Handler) userIdentity(c *gin.Context) {

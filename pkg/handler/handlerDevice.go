@@ -3,9 +3,9 @@ package handler
 import (
 	"net/http"
 
+	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/gin-gonic/gin"
-	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 )
 
 func (h *Handler) createDevice(c *gin.Context) {
@@ -30,6 +30,8 @@ func (h *Handler) createDevice(c *gin.Context) {
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"idDevice": idDevice,
 	})
+
+	logger.Log("Info", "", "A device has been created", nil)
 }
 
 func (h *Handler) deleteDevice(c *gin.Context) {
@@ -50,4 +52,6 @@ func (h *Handler) deleteDevice(c *gin.Context) {
 		logger.Log("Error", "DeleteDevice", "Error delete device:", err, id.(int), input.Name)
 		return
 	}
+
+	logger.Log("Info", "", "A device has been deleted", nil)
 }

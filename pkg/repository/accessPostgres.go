@@ -3,9 +3,9 @@ package repository
 import (
 	"fmt"
 
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/logger"
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/jmoiron/sqlx"
-	logger "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3"
 )
 
 type AccessHomePostgres struct {
@@ -35,7 +35,7 @@ func (r *AccessHomePostgres) AddUser(userID, accessLevel int, email string) (int
 	row := r.db.QueryRow(query, "active", accessLevel)
 	err = row.Scan(&id)
 	if err != nil {
-		logger.Log("Error", "Scan", "Error insert faccess:", err, &id)
+		logger.Log("Error", "Scan", "Error insert into access:", err, &id)
 		return 0, err
 	}
 
@@ -94,13 +94,6 @@ func (r *AccessHomePostgres) AddOwner(userID, homeID int) (int, error) {
 
 	query3 := fmt.Sprintf("INSERT INTO %s (homeID, accessID) VALUES ($1, $2)", "accessHome")
 	r.db.QueryRow(query3, homeID, id)
-	var idT int
-	rowT := r.db.QueryRow(query3, homeID, id)
-	err = rowT.Scan(&idT)
-	if err != nil {
-		logger.Log("Error", "Scan", "Error insert into accessHome:", err, "")
-		return 0, err
-	}
 
 	return id, nil
 }
@@ -152,7 +145,6 @@ func (r *AccessHomePostgres) DeleteUser(userID int, email string) error {
 		where a.accessid in (select a.accessid from accessclient a 
 			JOIN access ac ON a.accessid = ac.accessid where clientid = $1 AND accessLevel = 4));`
 	err := r.db.Get(&homeID, queryHomeID, userID)
-
 	if err != nil {
 		logger.Log("Error", "Get", "Error get homeID:", err, "")
 		return err
