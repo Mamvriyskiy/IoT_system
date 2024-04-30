@@ -131,6 +131,21 @@ func (mr *MockIHomeRepoMockRecorder) GetHomeByID(homeID interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHomeByID", reflect.TypeOf((*MockIHomeRepo)(nil).GetHomeByID), homeID)
 }
 
+// ListUserHome mocks base method.
+func (m *MockIHomeRepo) ListUserHome(userID int) ([]pkg.Home, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListUserHome", userID)
+	ret0, _ := ret[0].([]pkg.Home)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListUserHome indicates an expected call of ListUserHome.
+func (mr *MockIHomeRepoMockRecorder) ListUserHome(userID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListUserHome", reflect.TypeOf((*MockIHomeRepo)(nil).ListUserHome), userID)
+}
+
 // UpdateHome mocks base method.
 func (m *MockIHomeRepo) UpdateHome(home pkg.Home) error {
 	m.ctrl.T.Helper()
@@ -168,33 +183,48 @@ func (m *MockIAccessHomeRepo) EXPECT() *MockIAccessHomeRepoMockRecorder {
 	return m.recorder
 }
 
-// AddUser mocks base method.
-func (m *MockIAccessHomeRepo) AddUser(homeID, userID int, access pkg.AccessHome) (int, error) {
+// AddOwner mocks base method.
+func (m *MockIAccessHomeRepo) AddOwner(userID, homeID int) (int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddUser", homeID, userID, access)
+	ret := m.ctrl.Call(m, "AddOwner", userID, homeID)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AddOwner indicates an expected call of AddOwner.
+func (mr *MockIAccessHomeRepoMockRecorder) AddOwner(userID, homeID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddOwner", reflect.TypeOf((*MockIAccessHomeRepo)(nil).AddOwner), userID, homeID)
+}
+
+// AddUser mocks base method.
+func (m *MockIAccessHomeRepo) AddUser(userID, accessLevel int, email string) (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddUser", userID, accessLevel, email)
 	ret0, _ := ret[0].(int)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // AddUser indicates an expected call of AddUser.
-func (mr *MockIAccessHomeRepoMockRecorder) AddUser(homeID, userID, access interface{}) *gomock.Call {
+func (mr *MockIAccessHomeRepoMockRecorder) AddUser(userID, accessLevel, email interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddUser", reflect.TypeOf((*MockIAccessHomeRepo)(nil).AddUser), homeID, userID, access)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddUser", reflect.TypeOf((*MockIAccessHomeRepo)(nil).AddUser), userID, accessLevel, email)
 }
 
 // DeleteUser mocks base method.
-func (m *MockIAccessHomeRepo) DeleteUser(idUser int) error {
+func (m *MockIAccessHomeRepo) DeleteUser(idUser int, email string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteUser", idUser)
+	ret := m.ctrl.Call(m, "DeleteUser", idUser, email)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteUser indicates an expected call of DeleteUser.
-func (mr *MockIAccessHomeRepoMockRecorder) DeleteUser(idUser interface{}) *gomock.Call {
+func (mr *MockIAccessHomeRepoMockRecorder) DeleteUser(idUser, email interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUser", reflect.TypeOf((*MockIAccessHomeRepo)(nil).DeleteUser), idUser)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUser", reflect.TypeOf((*MockIAccessHomeRepo)(nil).DeleteUser), idUser, email)
 }
 
 // GetListUserHome mocks base method.
@@ -279,17 +309,17 @@ func (mr *MockIDeviceRepoMockRecorder) CreateDevice(homeID, device interface{}) 
 }
 
 // DeleteDevice mocks base method.
-func (m *MockIDeviceRepo) DeleteDevice(idDevice int) error {
+func (m *MockIDeviceRepo) DeleteDevice(idDevice int, name string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteDevice", idDevice)
+	ret := m.ctrl.Call(m, "DeleteDevice", idDevice, name)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteDevice indicates an expected call of DeleteDevice.
-func (mr *MockIDeviceRepoMockRecorder) DeleteDevice(idDevice interface{}) *gomock.Call {
+func (mr *MockIDeviceRepoMockRecorder) DeleteDevice(idDevice, name interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDevice", reflect.TypeOf((*MockIDeviceRepo)(nil).DeleteDevice), idDevice)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteDevice", reflect.TypeOf((*MockIDeviceRepo)(nil).DeleteDevice), idDevice, name)
 }
 
 // GetDeviceByID mocks base method.
@@ -331,31 +361,31 @@ func (m *MockIHistoryDeviceRepo) EXPECT() *MockIHistoryDeviceRepoMockRecorder {
 }
 
 // CreateDeviceHistory mocks base method.
-func (m *MockIHistoryDeviceRepo) CreateDeviceHistory(deviceID int, history pkg.DevicesHistory) (int, error) {
+func (m *MockIHistoryDeviceRepo) CreateDeviceHistory(userID int, history pkg.AddHistory) (int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateDeviceHistory", deviceID, history)
+	ret := m.ctrl.Call(m, "CreateDeviceHistory", userID, history)
 	ret0, _ := ret[0].(int)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateDeviceHistory indicates an expected call of CreateDeviceHistory.
-func (mr *MockIHistoryDeviceRepoMockRecorder) CreateDeviceHistory(deviceID, history interface{}) *gomock.Call {
+func (mr *MockIHistoryDeviceRepoMockRecorder) CreateDeviceHistory(userID, history interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDeviceHistory", reflect.TypeOf((*MockIHistoryDeviceRepo)(nil).CreateDeviceHistory), deviceID, history)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDeviceHistory", reflect.TypeOf((*MockIHistoryDeviceRepo)(nil).CreateDeviceHistory), userID, history)
 }
 
 // GetDeviceHistory mocks base method.
-func (m *MockIHistoryDeviceRepo) GetDeviceHistory(idDevice int) ([]pkg.DevicesHistory, error) {
+func (m *MockIHistoryDeviceRepo) GetDeviceHistory(userID int, name string) ([]pkg.DevicesHistory, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetDeviceHistory", idDevice)
+	ret := m.ctrl.Call(m, "GetDeviceHistory", userID, name)
 	ret0, _ := ret[0].([]pkg.DevicesHistory)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetDeviceHistory indicates an expected call of GetDeviceHistory.
-func (mr *MockIHistoryDeviceRepoMockRecorder) GetDeviceHistory(idDevice interface{}) *gomock.Call {
+func (mr *MockIHistoryDeviceRepoMockRecorder) GetDeviceHistory(userID, name interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDeviceHistory", reflect.TypeOf((*MockIHistoryDeviceRepo)(nil).GetDeviceHistory), idDevice)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDeviceHistory", reflect.TypeOf((*MockIHistoryDeviceRepo)(nil).GetDeviceHistory), userID, name)
 }

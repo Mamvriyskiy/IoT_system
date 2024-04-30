@@ -15,31 +15,32 @@ func NewHandler(services *service.Services) *Handler {
 
 func (h *Handler) InitRouters() *gin.Engine {
 	router := gin.New()
-
 	// *TODO: middlewear
 	auth := router.Group("/auth")
 	auth.POST("/sign-up", h.signUp)
 	auth.POST("/sign-in", h.signIn)
 
-	home := router.Group("/home")
+	api := router.Group("/api", h.userIdentity)
+	home := api.Group("/home")
 	home.POST("/", h.createHome)
-	home.DELETE("/:id", h.deleteHome)
-	home.PUT("/:id", h.updateHome)
+	home.DELETE("/", h.deleteHome)
+	home.PUT("/", h.updateHome)
+	home.GET("/", h.listHome)
 
-	access := router.Group(":id/access")
+	access := api.Group("/access")
 	access.POST("/", h.addUser)
-	access.DELETE("/:id", h.deleteUser)
-	access.GET("/:id", h.getListUserHome)
-	access.PUT("/level/:id", h.updateLevel)
-	access.PUT("/status/:id", h.updateStatus)
+	access.DELETE("/", h.deleteUser)
+	access.GET("/", h.getListUserHome)
+	access.PUT("/level/", h.updateLevel)
+	access.PUT("/status/", h.updateStatus)
 
-	devices := router.Group(":id/device")
+	devices := api.Group("/device")
 	devices.POST("/", h.createDevice)
-	devices.DELETE("/:id", h.deleteDevice)
+	devices.DELETE("/", h.deleteDevice)
 
-	deviceHistory := router.Group(":id/device/:id/history")
+	deviceHistory := api.Group("/history")
 	deviceHistory.POST("/", h.createDeviceHistory)
-	deviceHistory.GET("/:id", h.getDeviceHistory)
+	deviceHistory.GET("/", h.getDeviceHistory)
 
 	return router
 }

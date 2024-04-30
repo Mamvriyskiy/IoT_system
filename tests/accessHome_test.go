@@ -76,11 +76,11 @@ func TestDeleteUser(t *testing.T) {
 
 	mockRepo := mocks_service.NewMockIAccessHomeRepo(ctrl)
 
-	mockRepo.EXPECT().DeleteUser(10).Return(nil)
+	mockRepo.EXPECT().DeleteUser(10, "dev1").Return(nil)
 
 	accessService := service.NewAccessHomeService(mockRepo)
 
-	err := accessService.DeleteUser(10)
+	err := accessService.DeleteUser(10, "dev1")
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
@@ -92,18 +92,13 @@ func TestAddUser(t *testing.T) {
 
 	mockRepo := mocks_service.NewMockIAccessHomeRepo(ctrl)
 
-	accessHome := pkg.AccessHome{
-		AccessStatus: "active",
-		AccessLevel:  2,
-	}
 	userID := 1
-	homeID := 1
 
-	mockRepo.EXPECT().AddUser(userID, homeID, accessHome).Return(5, nil)
+	mockRepo.EXPECT().AddUser(userID, 2, "mail").Return(5, nil)
 
 	accessService := service.NewAccessHomeService(mockRepo)
 
-	accessID, err := accessService.AddUser(userID, homeID, accessHome)
+	accessID, err := accessService.AddUser(userID, 2, "mail")
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}

@@ -45,11 +45,11 @@ func TestDeleteDevice(t *testing.T) {
 
 	mockRepo := mocks_service.NewMockIDeviceRepo(ctrl)
 
-	mockRepo.EXPECT().DeleteDevice(10).Return(nil)
+	mockRepo.EXPECT().DeleteDevice(10, "dev1").Return(nil)
 
 	deviceService := service.NewDeviceService(mockRepo)
 
-	err := deviceService.DeleteDevice(10)
+	err := deviceService.DeleteDevice(10, "dev1")
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
@@ -61,11 +61,11 @@ func TestDeleteHomeDevice(t *testing.T) {
 
 	mockRepo := mocks_service.NewMockIDeviceRepo(ctrl)
 
-	mockRepo.EXPECT().DeleteDevice(10).Return(nil)
+	mockRepo.EXPECT().DeleteDevice(10, "dev1").Return(nil)
 
 	deviceService := service.NewDeviceService(mockRepo)
 
-	err := deviceService.DeleteDevice(10)
+	err := deviceService.DeleteDevice(10, "dev1")
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}

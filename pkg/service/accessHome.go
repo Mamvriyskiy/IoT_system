@@ -13,12 +13,16 @@ func NewAccessHomeService(repo repository.IAccessHomeRepo) *AccessHomeService {
 	return &AccessHomeService{repo: repo}
 }
 
-func (s *AccessHomeService) AddUser(homeID, userID int, access pkg.AccessHome) (int, error) {
-	return s.repo.AddUser(homeID, userID, access)
+func (s *AccessHomeService) AddOwner(userID, homeID int) (int, error) {
+	return s.repo.AddOwner(userID, homeID)
 }
 
-func (s *AccessHomeService) DeleteUser(idUser int) error {
-	return s.repo.DeleteUser(idUser)
+func (s *AccessHomeService) AddUser(userID, accessLevel int, email string) (int, error) {
+	return s.repo.AddUser(userID, accessLevel, email)
+}
+
+func (s *AccessHomeService) DeleteUser(idUser int, email string) error {
+	return s.repo.DeleteUser(idUser, email)
 }
 
 func (s *AccessHomeService) UpdateLevel(idUser int, access pkg.AccessHome) error {

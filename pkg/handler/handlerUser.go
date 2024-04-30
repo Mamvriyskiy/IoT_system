@@ -21,6 +21,8 @@ func (h *Handler) signUp(c *gin.Context) {
 		return
 	}
 
+	// c.Next()
+
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"id": id,
 	})
