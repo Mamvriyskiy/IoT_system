@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/logger"
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/jmoiron/sqlx"
 )
@@ -24,6 +25,7 @@ func (r *DevicePostgres) CreateDevice(userID int, device *pkg.Devices) (int, err
 
 	err := r.db.Get(&homeID, queryHomeID, userID)
 	if err != nil {
+		logger.Log("Error", "Get", "Error get homeID:", err, &homeID, userID)
 		return 0, err
 	}
 
@@ -36,12 +38,16 @@ func (r *DevicePostgres) CreateDevice(userID int, device *pkg.Devices) (int, err
 		device.MinParameter, device.MaxParameter)
 	err = row.Scan(&id)
 	if err != nil {
+		logger.Log("Error", "Scan", "Error insert into device:", err, &id)
 		return 0, err
 	}
 
 	query1 := fmt.Sprintf("INSERT INTO %s (homeID, deviceId) VALUES ($1, $2)", "deviceHome")
-	r.db.QueryRow(query1, homeID, id)
+	row = r.db.QueryRow(query1, homeID, id)
+	var idT int
+	err = row.Scan(&idT)
 	if err != nil {
+		logger.Log("Error", "Scan", "Error insert into deviceHome:", err, &idT)
 		return 0, err
 	}
 
@@ -57,6 +63,7 @@ func (r *DevicePostgres) DeleteDevice(userID int, name string) error {
 
 	err := r.db.Get(&homeID, queryHomeID, userID)
 	if err != nil {
+		logger.Log("Error", "Get", "Error get homeID:", err, &homeID, userID)
 		return err
 	}
 	var deviceID int
@@ -65,6 +72,7 @@ func (r *DevicePostgres) DeleteDevice(userID int, name string) error {
 		where d2.homeid = $1 and d.name = $2;`
 	err = r.db.Get(&deviceID, queryDeviceID, homeID, name)
 	if err != nil {
+		logger.Log("Error", "Get", "Error get deviceID:", err, &deviceID, homeID, name)
 		return err
 	}
 
@@ -75,13 +83,15 @@ func (r *DevicePostgres) DeleteDevice(userID int, name string) error {
 
 	_, err = r.db.Exec(query, deviceID)
 	if err != nil {
+		logger.Log("Error", "Exec", "Error delete historydev:", err, deviceID)
 		return err
 	}
 
 	query = `DELETE FROM device 
-							where deviceid = $1;`
+				where deviceid = $1;`
 	_, err = r.db.Exec(query, deviceID)
 	if err != nil {
+		logger.Log("Error", "Exec", "Error delete device:", err, deviceID)
 		return err
 	}
 
