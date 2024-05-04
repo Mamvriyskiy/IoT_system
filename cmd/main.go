@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
 	"os"
 
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/logger"
@@ -13,10 +11,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
-
-func home_page(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "<b>Main Text</b>")
-}
 
 func main() {
 	if err := initConfig(); err != nil {
@@ -40,8 +34,7 @@ func main() {
 		SSLMode:  viper.GetString("db.sslmode"),
 	})
 	if err != nil {
-		logger.Log("Error", "NewPostgresDB", "Connect db:", err, viper.GetString("db.host"),  viper.GetString("db.port"), 
-		viper.GetString("db.username"), viper.GetString("db.dbname"), viper.GetString("db.sslmode"), os.Getenv("DB_PASSWORD"))
+		logger.Log("Error", "initCongig", "Error config DB:", err, "")
 		return
 	}
 

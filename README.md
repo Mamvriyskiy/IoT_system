@@ -85,37 +85,23 @@
 
 Этот сценарий сборки контейнера Docker, настройки базы данных и запуска сервера может быть использован на любом устройстве, где установлен Docker и где можно выполнить команды Bash. 
 
-Создание контейнера Docker для базы данных:
+Для запуска сервера необходимо выполнить следующие команды:
 ```bash
-cd postgresData
-docker-compose up
+    make build
+    make run
 ```
 
-Подключение к контейнеру:
+Для удаления сервера можно использовать следующую команду:
 ```bash
-docker exec -it IoT_system bash
-```
-Подключение к PostgreSQL и выбор базы данных:
-```bash
-psql -U Misfio32
-\c postgres
+    make clean
 ```
 
-Выполнение сценариев SQL для создания таблиц и применения ограничений:
+Создание таблиц базы данных:
 ```bash
-\i ./mnt/createTable.sql
-\i ./mnt/limitation.sql
+    make create
 ```
 
-Установка переменной среды и модулей GO:
+Удаление таблиц базы данных:
 ```bash
-export GO111MODULE=on
-go mod download
+    make delete
 ```
-
-Запуск сервера:
-```bash
-cd ..
-go run ./cmd/main.go
-```
-
