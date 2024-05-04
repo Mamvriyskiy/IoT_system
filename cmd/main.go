@@ -40,7 +40,8 @@ func main() {
 		SSLMode:  viper.GetString("db.sslmode"),
 	})
 	if err != nil {
-		logger.Log("Error", "NewPostgresDB", "Connect db:", err, "")
+		logger.Log("Error", "NewPostgresDB", "Connect db:", err, viper.GetString("db.host"),  viper.GetString("db.port"), 
+		viper.GetString("db.username"), viper.GetString("db.dbname"), viper.GetString("db.sslmode"), os.Getenv("DB_PASSWORD"))
 		return
 	}
 
