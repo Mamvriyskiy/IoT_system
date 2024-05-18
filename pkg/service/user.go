@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"time"
 
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/logger"
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository"
 	jwt "github.com/dgrijalva/jwt-go"
@@ -30,13 +31,13 @@ func (s *UserService) CreateUser(user pkg.User) (int, error) {
 
 func (s *UserService) CheckUser(user pkg.User) (id int, err error) {
 	if user.Email == "" {
-		// *TODO: log
+		logger.Log("Error", "CheckUser", "Empty email:", nil, "")
 		return -1, err
 	}
 
 	user, err = s.repo.GetUser(user.Username, user.Password)
 	if err != nil {
-		// *TODO: log
+		logger.Log("Error", "GetUser", "Error get user:", err, user.Username, user.Password)
 		return id, err
 	}
 
@@ -51,6 +52,7 @@ type tokenClaims struct {
 func (s *UserService) GenerateToken(login, password string) (string, error) {
 	user, err := s.repo.GetUser(login, s.generatePasswordHash(password))
 	if err != nil {
+		logger.Log("Error", "GetUser", "Error get user:", err, login, "s.generatePasswordHash(password)")
 		return "", err
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
@@ -75,17 +77,20 @@ func (s *UserService) ParseToken(accessToken string) (int, error) {
 	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{},
 		func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				logger.Log("Error", "token.Method.(*jwt.SigningMethodHMAC)", "Error jwt token:", nil, "")
 				return 0, nil
 			}
 
 			return []byte(signingKey), nil
 		})
 	if err != nil {
+		logger.Log("Error", "jwt.ParseWithClaims", "Error parse token:", err, accessToken)
 		return 0, err
 	}
 
 	claims, ok := token.Claims.(*tokenClaims)
 	if !ok {
+		logger.Log("Error", "token.Claims.(*tokenClaims)", "Error token:", nil)
 		return 0, nil
 	}
 

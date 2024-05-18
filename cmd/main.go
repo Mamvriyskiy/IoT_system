@@ -1,9 +1,9 @@
 package main
 
 import (
-	"log"
 	"os"
 
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/logger"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/handler"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository"
@@ -14,14 +14,16 @@ import (
 
 func main() {
 	if err := initConfig(); err != nil {
-		// *TODO: log
+		logger.Log("Error", "initCongig", "Error config DB:", err, "")
 		return
 	}
+	logger.Log("Info", "", "InitConfig", nil)
 
 	if err := godotenv.Load(); err != nil {
-		// *TODO: log
+		logger.Log("Error", "Load", "Load env file:", err, "")
 		return
 	}
+	logger.Log("Info", "", "Load env", nil)
 
 	db, err := repository.NewPostgresDB(&repository.Config{
 		Host:     viper.GetString("db.host"),
@@ -32,15 +34,20 @@ func main() {
 		SSLMode:  viper.GetString("db.sslmode"),
 	})
 	if err != nil {
+		logger.Log("Error", "initCongig", "Error config DB:", err, "")
 		return
 	}
+
 	repos := repository.NewRepository(db)
 	services := service.NewServices(repos)
 	handlers := handler.NewHandler(services)
 
+	logger.Log("Info", "", "The connection to the database is established", nil)
+
 	srv := new(pkg.Server)
 	if err := srv.Run("8000", handlers.InitRouters()); err != nil {
-		log.Fatal("error occurred while running http server: ", err)
+		logger.Log("Error", "Run", "Error occurred while running http server:", err, "")
+		return
 	}
 }
 

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/logger"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/service"
 	"github.com/gin-gonic/gin"
 )
@@ -15,7 +16,7 @@ func NewHandler(services *service.Services) *Handler {
 
 func (h *Handler) InitRouters() *gin.Engine {
 	router := gin.New()
-	// *TODO: middlewear
+
 	auth := router.Group("/auth")
 	auth.POST("/sign-up", h.signUp)
 	auth.POST("/sign-in", h.signIn)
@@ -41,6 +42,8 @@ func (h *Handler) InitRouters() *gin.Engine {
 	deviceHistory := api.Group("/history")
 	deviceHistory.POST("/", h.createDeviceHistory)
 	deviceHistory.GET("/", h.getDeviceHistory)
+
+	logger.Log("Info", "", "Create router", nil)
 
 	return router
 }

@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/logger"
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"github.com/jmoiron/sqlx"
 )
@@ -23,6 +24,7 @@ func (r *HomePostgres) ListUserHome(userID int) ([]pkg.Home, error) {
 	var homeList []pkg.Home
 	err := r.db.Select(&homeList, getHomeID, userID)
 	if err != nil {
+		logger.Log("Error", "Select", "Error Select from home:", err, getHomeID, userID)
 		return nil, err
 	}
 
@@ -34,6 +36,7 @@ func (r *HomePostgres) CreateHome(ownerID int, home pkg.Home) (int, error) {
 	query := fmt.Sprintf("INSERT INTO %s (ownerid, name) values ($1, $2) RETURNING homeID", "home")
 	row := r.db.QueryRow(query, ownerID, home.Name)
 	if err := row.Scan(&id); err != nil {
+		logger.Log("Error", "Scan", "Error insert into home:", err, ownerID, home.Name)
 		return 0, err
 	}
 
@@ -49,6 +52,7 @@ func (r *HomePostgres) DeleteHome(userID int) error {
 
 	err := r.db.Get(&homeID, queryHomeID, userID)
 	if err != nil {
+		logger.Log("Error", "Get", "Error select from home:", err, userID)
 		return err
 	}
 
@@ -57,6 +61,7 @@ func (r *HomePostgres) DeleteHome(userID int) error {
 			FROM accesshome WHERE homeid = $1);`
 	_, err = r.db.Exec(query1, homeID)
 	if err != nil {
+		logger.Log("Error", "Exec", "Error delete from access:", err, homeID)
 		return err
 	}
 
@@ -66,6 +71,7 @@ func (r *HomePostgres) DeleteHome(userID int) error {
 				IN (SELECT deviceid FROM devicehome WHERE homeid = $1));`
 	_, err = r.db.Exec(query2, homeID)
 	if err != nil {
+		logger.Log("Error", "Exec", "Error delete from historydev:", err, homeID)
 		return err
 	}
 
@@ -74,6 +80,7 @@ func (r *HomePostgres) DeleteHome(userID int) error {
 			FROM devicehome WHERE homeid = $1);`
 	_, err = r.db.Exec(query3, homeID)
 	if err != nil {
+		logger.Log("Error", "Exec", "Error delete from device:", err, homeID)
 		return err
 	}
 
@@ -81,6 +88,7 @@ func (r *HomePostgres) DeleteHome(userID int) error {
 		WHERE homeid = $1;`
 	_, err = r.db.Exec(query4, homeID)
 	if err != nil {
+		logger.Log("Error", "Exec", "Error delete from home:", err, homeID)
 		return err
 	}
 
@@ -96,8 +104,7 @@ func (r *HomePostgres) UpdateHome(home pkg.Home) error {
 
 	err := r.db.Get(&homeID, queryHomeID, home.OwnerID)
 	if err != nil {
-		// Обработка ошибки, если запрос не удалось выполнить
-
+		logger.Log("Error", "Get", "Error select from home:", err, home.OwnerID)
 		return err
 	}
 
@@ -106,15 +113,14 @@ func (r *HomePostgres) UpdateHome(home pkg.Home) error {
 		WHERE homeid = $2;`
 	result, err := r.db.Exec(query, home.Name, homeID)
 	if err != nil {
-		// Обработка ошибки, если запрос не удалось выполнить
+		logger.Log("Error", "Exec", "Error update home:", err, home.Name, homeID)
 
 		return err
 	}
 
 	_, err = result.RowsAffected()
 	if err != nil {
-		// Обработка ошибки, если не удалось получить количество затронутых строк
-
+		logger.Log("Error", "RowsAffected", "Error update home:", err, home.Name, homeID)
 		return err
 	}
 
