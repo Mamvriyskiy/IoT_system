@@ -2,7 +2,7 @@ package service
 
 import (
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
-	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository"
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repositoryCH"
 )
 
 type IUser interface {
@@ -48,7 +48,17 @@ type Services struct {
 	IHistoryDevice
 }
 
-func NewServices(repo *repository.Repository) *Services {
+// func NewServices(repo *repository.Repository) *Services {
+// 	return &Services{
+// 		IUser:          NewUserService(repo.IUserRepo),
+// 		IHome:          NewHomeService(repo.IHomeRepo),
+// 		IAccessHome:    NewAccessHomeService(repo.IAccessHomeRepo),
+// 		IDevice:        NewDeviceService(repo.IDeviceRepo),
+// 		IHistoryDevice: NewHistoryDeviceService(repo.IHistoryDeviceRepo),
+// 	}
+// }
+
+func NewServices(repo *repositoryCH.Repository) *Services {
 	return &Services{
 		IUser:          NewUserService(repo.IUserRepo),
 		IHome:          NewHomeService(repo.IHomeRepo),
@@ -57,3 +67,4 @@ func NewServices(repo *repository.Repository) *Services {
 		IHistoryDevice: NewHistoryDeviceService(repo.IHistoryDeviceRepo),
 	}
 }
+

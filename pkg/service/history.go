@@ -2,7 +2,7 @@ package service
 
 import (
 	pkg "git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
-	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository"
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repositoryPsql"
 )
 
 type HistoryDeviceService struct {

@@ -6,7 +6,8 @@ import (
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/logger"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/handler"
-	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repository"
+	//"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repositoryPsql"
+	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/repositoryCH"
 	"git.iu7.bmstu.ru/mis21u869/PPO/-/tree/lab3/pkg/service"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
@@ -25,7 +26,16 @@ func main() {
 	}
 	logger.Log("Info", "", "Load env", nil)
 
-	db, err := repository.NewPostgresDB(&repository.Config{
+	// db, err := repositoryPsql.NewPostgresDB(&repository.Config{
+	// 	Host:     viper.GetString("db.host"),
+	// 	Port:     viper.GetString("db.port"),
+	// 	Username: viper.GetString("db.username"),
+	// 	Password: os.Getenv("DB_PASSWORD"),
+	// 	DBName:   viper.GetString("db.dbname"),
+	// 	SSLMode:  viper.GetString("db.sslmode"),
+	// })
+
+	db, err := repositoryCH.NewClickHouseDB(&repositoryCH.Config{
 		Host:     viper.GetString("db.host"),
 		Port:     viper.GetString("db.port"),
 		Username: viper.GetString("db.username"),
@@ -33,12 +43,15 @@ func main() {
 		DBName:   viper.GetString("db.dbname"),
 		SSLMode:  viper.GetString("db.sslmode"),
 	})
+
 	if err != nil {
 		logger.Log("Error", "initCongig", "Error config DB:", err, "")
 		return
 	}
+	
+	repos := repositoryCH.NewRepository(db)
 
-	repos := repository.NewRepository(db)
+	// repos := repository.NewRepository(db)
 	services := service.NewServices(repos)
 	handlers := handler.NewHandler(services)
 

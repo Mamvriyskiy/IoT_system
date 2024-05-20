@@ -10,7 +10,7 @@ services:
       - POSTGRES_USER=Misfio32
     volumes:
       - type: bind
-        source: /Users/ivanmamvriyskiy/Desktop/PPOdev/postgresData
+        source: /Users/ivanmamvriyskiy/Desktop/PPO/postgresData
         target: /mnt
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
